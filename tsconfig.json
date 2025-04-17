@@ -2,12 +2,14 @@
   "compilerOptions": {
     "target": "es2020",
     "outDir": "./dist",
-    "module": "esnext",
+    "module": "nodenext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "moduleResolution": "nodenext"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "exclude": ["node_modules", "**/*.test.ts", "**/__tests__/"]
 }

@@ -1,6 +1,7 @@
 {
   "name": "ngx-html-bridge",
   "version": "1.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsc -w"
@@ -10,6 +11,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.14.1",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@angular/compiler": "^19.2.7",
+    "jsdom": "^26.1.0"
   }
 }
