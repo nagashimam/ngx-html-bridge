@@ -1,5 +1,10 @@
 import { readFileSync } from "node:fs";
-import { parseTemplate, TmplAstElement, TmplAstText } from "@angular/compiler";
+import {
+	parseTemplate,
+	TmplAstElement,
+	TmplAstText,
+	TmplAstIfBlock,
+} from "@angular/compiler";
 import type { TmplAstNode } from "@angular/compiler";
 import { JSDOM } from "jsdom";
 
@@ -47,6 +52,9 @@ const parseEachNode = (node: TmplAstNode): Node[][] => {
 		}
 		return [[element]];
 	}
+	if (node instanceof TmplAstIfBlock) {
+		return parseIfBlock(node);
+	}
 	if (node instanceof TmplAstText) {
 		return [[document.createTextNode(node.value)]];
 	}
@@ -76,5 +84,16 @@ const generate3DCombinations = (arrays: Node[][][]): Node[][] => {
 	}
 
 	backtrack(0, []);
+	return result;
+};
+
+const parseIfBlock = (ifBlock: TmplAstIfBlock): Node[][] => {
+	const parsedBranches = ifBlock.branches.map((branch) =>
+		parseAstNodes(branch.children),
+	);
+	const result: Node[][] = [];
+	for (const branch of parsedBranches) {
+		result.push(...branch);
+	}
 	return result;
 };
