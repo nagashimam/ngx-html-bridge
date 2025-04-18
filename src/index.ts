@@ -1,1 +1,1 @@
-console.log("hello world");
+export { bridge } from "./bridge.js";
