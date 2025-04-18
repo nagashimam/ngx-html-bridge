@@ -4,6 +4,7 @@ import {
 	TmplAstElement,
 	TmplAstText,
 	TmplAstIfBlock,
+	TmplAstSwitchBlock,
 } from "@angular/compiler";
 import type { TmplAstNode } from "@angular/compiler";
 import { JSDOM } from "jsdom";
@@ -55,6 +56,9 @@ const parseEachNode = (node: TmplAstNode): Node[][] => {
 	if (node instanceof TmplAstIfBlock) {
 		return parseIfBlock(node);
 	}
+	if (node instanceof TmplAstSwitchBlock) {
+		return parseSwitchBlock(node);
+	}
 	if (node instanceof TmplAstText) {
 		return [[document.createTextNode(node.value)]];
 	}
@@ -93,6 +97,17 @@ const parseIfBlock = (ifBlock: TmplAstIfBlock): Node[][] => {
 	);
 	const result: Node[][] = [];
 	for (const branch of parsedBranches) {
+		result.push(...branch);
+	}
+	return result;
+};
+
+const parseSwitchBlock = (switchBlock: TmplAstSwitchBlock): Node[][] => {
+	const parsedCases = switchBlock.cases.map((caseBlock) =>
+		parseAstNodes(caseBlock.children),
+	);
+	const result: Node[][] = [];
+	for (const branch of parsedCases) {
 		result.push(...branch);
 	}
 	return result;

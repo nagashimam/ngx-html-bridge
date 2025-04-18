@@ -25,3 +25,13 @@ test("Can parse template with @if", () => {
 	assert.strictEqual(result[2], "<p>only flagA is true</p>");
 	assert.strictEqual(result[3], "<p>flagA is false</p>");
 });
+
+test("Can parse template with @switch", () => {
+	const path = resolve("src/__tests__/switch/switch.component.html");
+	const result = bridge(path);
+
+	assert.strictEqual(result.length, 3);
+	assert.strictEqual(result[0], "<p>title is switch</p>");
+	assert.strictEqual(result[1], "<p>title is switch2</p>");
+	assert.strictEqual(result[2], "<p>title is not yet decided</p>");
+});
