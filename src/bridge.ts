@@ -42,6 +42,23 @@ const parseEachNode = (node: TmplAstNode): Node[][] => {
 	if (node instanceof TmplAstElement) {
 		const name = node.name;
 		const element = document.createElement(name);
+		console.log(node);
+		if (node.attributes.length > 0) {
+			for (const attribute of node.attributes) {
+				const { name, value } = attribute;
+				element.setAttribute(name, value);
+			}
+		}
+
+		if (node.inputs.length > 0) {
+			for (const input of node.inputs) {
+				const { name, value } = input;
+				element.setAttribute(
+					name,
+					(value as ASTWithSource).source || "some random text",
+				);
+			}
+		}
 
 		if (node.children.length > 0) {
 			const childrenCombinations = parseAstNodes(node.children);
