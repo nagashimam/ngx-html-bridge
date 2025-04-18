@@ -4,7 +4,8 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc -w"
+    "dev": "tsc -w",
+    "test": "node --experimental-strip-types --test"
   },
   "keywords": [],
   "author": "",
