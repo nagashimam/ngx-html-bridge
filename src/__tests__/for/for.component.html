@@ -1,0 +1,5 @@
+@for (user of users; track user.name) {
+  <li>{{ user.name }}</li>
+} @empty {
+  <li>There are no users.</li>
+}

@@ -5,8 +5,10 @@ import {
 	TmplAstText,
 	TmplAstIfBlock,
 	TmplAstSwitchBlock,
+	TmplAstForLoopBlock,
+	TmplAstBoundText,
 } from "@angular/compiler";
-import type { TmplAstNode } from "@angular/compiler";
+import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { JSDOM } from "jsdom";
 
 const dom = new JSDOM();
@@ -16,7 +18,9 @@ const document = window.document;
 export const bridge = (path: string): string[] => {
 	// TODO: Add try-catch and handle errors
 	const fileContents = readFileSync(path, "utf-8");
-	const ast = parseTemplate(fileContents, path);
+	const ast = parseTemplate(fileContents, path, {
+		collectCommentNodes: true,
+	});
 	const parsedNodesCombinations = parseAstNodes(ast.nodes);
 	return parsedNodesCombinations.map((parsedNodesCombination) => {
 		const container = document.createElement("div");
@@ -59,8 +63,20 @@ const parseEachNode = (node: TmplAstNode): Node[][] => {
 	if (node instanceof TmplAstSwitchBlock) {
 		return parseSwitchBlock(node);
 	}
+	if (node instanceof TmplAstForLoopBlock) {
+		return parseForBlock(node);
+	}
 	if (node instanceof TmplAstText) {
 		return [[document.createTextNode(node.value)]];
+	}
+	if (node instanceof TmplAstBoundText) {
+		return [
+			[
+				document.createTextNode(
+					(node.value as ASTWithSource).source || "some random text",
+				),
+			],
+		];
 	}
 	return [[]];
 };
@@ -110,5 +126,33 @@ const parseSwitchBlock = (switchBlock: TmplAstSwitchBlock): Node[][] => {
 	for (const branch of parsedCases) {
 		result.push(...branch);
 	}
+	return result;
+};
+
+const parseForBlock = (forBlock: TmplAstForLoopBlock): Node[][] => {
+	const result: Node[][] = [];
+
+	// Handle case for no loop
+	if (forBlock.empty && forBlock.empty.children.length > 0) {
+		for (const parsedEmptyBlock of parseAstNodes(forBlock.empty.children)) {
+			result.push(parsedEmptyBlock);
+		}
+	} else {
+		result.push([]);
+	}
+
+	// Handle case for loop once
+	for (const parsedForBlock of parseAstNodes(forBlock.children)) {
+		result.push(parsedForBlock);
+	}
+
+	// Handle case for loop twice
+	for (const parsedForBlock of parseAstNodes([
+		...forBlock.children,
+		...forBlock.children,
+	])) {
+		result.push(parsedForBlock);
+	}
+
 	return result;
 };

@@ -35,3 +35,29 @@ test("Can parse template with @switch", () => {
 	assert.strictEqual(result[1], "<p>title is switch2</p>");
 	assert.strictEqual(result[2], "<p>title is not yet decided</p>");
 });
+
+test("Can parse template with @for", () => {
+	const path = resolve("src/__tests__/for/for.component.html");
+	const result = bridge(path);
+	assert.strictEqual(result.length, 3);
+	assert.strictEqual(result[0], "<li>There are no users.</li>");
+	assert.strictEqual(result[1], "<li>{{ user.name }}</li>");
+	assert.strictEqual(
+		result[2],
+		"<li>{{ user.name }}</li><li>{{ user.name }}</li>",
+	);
+});
+
+test("Can parse template with @for without empty block", () => {
+	const path = resolve(
+		"src/__tests__/for-without-empty/for-without-empty.component.html",
+	);
+	const result = bridge(path);
+	assert.strictEqual(result.length, 3);
+	assert.strictEqual(result[0], "");
+	assert.strictEqual(result[1], "<li>{{ user.name }}</li>");
+	assert.strictEqual(
+		result[2],
+		"<li>{{ user.name }}</li><li>{{ user.name }}</li>",
+	);
+});
