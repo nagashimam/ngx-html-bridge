@@ -8,26 +8,27 @@ import {
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { document } from "./dom.ts";
+import type { Properties } from "./types.ts";
 
-export const parseAstNodes = (nodes: TmplAstNode[]) => {
+export const parseAstNodes = (nodes: TmplAstNode[], properties: Properties) => {
 	const parsedNodes = generate3DCombinations(
-		nodes.map((node) => parseEachNode(node)),
+		nodes.map((node) => parseEachNode(node, properties)),
 	);
 	return parsedNodes;
 };
 
-const parseEachNode = (node: TmplAstNode): Node[][] => {
+const parseEachNode = (node: TmplAstNode, properties: Properties): Node[][] => {
 	if (node instanceof TmplAstElement) {
-		return parseElement(node);
+		return parseElement(node, properties);
 	}
 	if (node instanceof TmplAstIfBlock) {
-		return parseIfBlock(node);
+		return parseIfBlock(node, properties);
 	}
 	if (node instanceof TmplAstSwitchBlock) {
-		return parseSwitchBlock(node);
+		return parseSwitchBlock(node, properties);
 	}
 	if (node instanceof TmplAstForLoopBlock) {
-		return parseForBlock(node);
+		return parseForBlock(node, properties);
 	}
 	if (node instanceof TmplAstText) {
 		return [[document.createTextNode(node.value)]];
@@ -44,7 +45,10 @@ const parseEachNode = (node: TmplAstNode): Node[][] => {
 	return [[]];
 };
 
-const parseElement = (elementNode: TmplAstElement): Node[][] => {
+const parseElement = (
+	elementNode: TmplAstElement,
+	properties: Properties,
+): Node[][] => {
 	const name = elementNode.name;
 	const element = document.createElement(name);
 	if (elementNode.attributes.length > 0) {
@@ -57,15 +61,17 @@ const parseElement = (elementNode: TmplAstElement): Node[][] => {
 	if (elementNode.inputs.length > 0) {
 		for (const input of elementNode.inputs) {
 			const { name, value } = input;
-			element.setAttribute(
-				name,
-				(value as ASTWithSource).source || "some random text",
-			);
+			const source = (value as ASTWithSource).source || "";
+			const computedValue = properties.get(source) || "some random text";
+			element.setAttribute(name, computedValue);
 		}
 	}
 
 	if (elementNode.children.length > 0) {
-		const childrenCombinations = parseAstNodes(elementNode.children);
+		const childrenCombinations = parseAstNodes(
+			elementNode.children,
+			properties,
+		);
 		return [
 			childrenCombinations.map((childrenCombination) => {
 				const clonedElement = element.cloneNode(true) as Element;
@@ -79,9 +85,12 @@ const parseElement = (elementNode: TmplAstElement): Node[][] => {
 	return [[element]];
 };
 
-const parseIfBlock = (ifBlock: TmplAstIfBlock): Node[][] => {
+const parseIfBlock = (
+	ifBlock: TmplAstIfBlock,
+	properties: Properties,
+): Node[][] => {
 	const parsedBranches = ifBlock.branches.map((branch) =>
-		parseAstNodes(branch.children),
+		parseAstNodes(branch.children, properties),
 	);
 	const result: Node[][] = [];
 	for (const branch of parsedBranches) {
@@ -90,9 +99,12 @@ const parseIfBlock = (ifBlock: TmplAstIfBlock): Node[][] => {
 	return result;
 };
 
-const parseSwitchBlock = (switchBlock: TmplAstSwitchBlock): Node[][] => {
+const parseSwitchBlock = (
+	switchBlock: TmplAstSwitchBlock,
+	properties: Properties,
+): Node[][] => {
 	const parsedCases = switchBlock.cases.map((caseBlock) =>
-		parseAstNodes(caseBlock.children),
+		parseAstNodes(caseBlock.children, properties),
 	);
 	const result: Node[][] = [];
 	for (const branch of parsedCases) {
@@ -101,12 +113,18 @@ const parseSwitchBlock = (switchBlock: TmplAstSwitchBlock): Node[][] => {
 	return result;
 };
 
-const parseForBlock = (forBlock: TmplAstForLoopBlock): Node[][] => {
+const parseForBlock = (
+	forBlock: TmplAstForLoopBlock,
+	properties: Properties,
+): Node[][] => {
 	const result: Node[][] = [];
 
 	// Handle case for no loop
 	if (forBlock.empty && forBlock.empty.children.length > 0) {
-		for (const parsedEmptyBlock of parseAstNodes(forBlock.empty.children)) {
+		for (const parsedEmptyBlock of parseAstNodes(
+			forBlock.empty.children,
+			properties,
+		)) {
 			result.push(parsedEmptyBlock);
 		}
 	} else {
@@ -114,15 +132,15 @@ const parseForBlock = (forBlock: TmplAstForLoopBlock): Node[][] => {
 	}
 
 	// Handle case for loop once
-	for (const parsedForBlock of parseAstNodes(forBlock.children)) {
+	for (const parsedForBlock of parseAstNodes(forBlock.children, properties)) {
 		result.push(parsedForBlock);
 	}
 
 	// Handle case for loop twice
-	for (const parsedForBlock of parseAstNodes([
-		...forBlock.children,
-		...forBlock.children,
-	])) {
+	for (const parsedForBlock of parseAstNodes(
+		[...forBlock.children, ...forBlock.children],
+		properties,
+	)) {
 		result.push(parsedForBlock);
 	}
 

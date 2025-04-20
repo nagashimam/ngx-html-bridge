@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { parseTemplate } from "@angular/compiler";
 import { document } from "./dom.ts";
 import { parseAstNodes } from "./parse.ts";
+import { getPropertiesFromComponent } from "./properties.ts";
 
 export const bridge = (path: string): string[] => {
 	// TODO: Add try-catch and handle errors
@@ -9,7 +10,8 @@ export const bridge = (path: string): string[] => {
 	const ast = parseTemplate(fileContents, path, {
 		collectCommentNodes: true,
 	});
-	const parsedNodesCombinations = parseAstNodes(ast.nodes);
+	const properties = getPropertiesFromComponent(path);
+	const parsedNodesCombinations = parseAstNodes(ast.nodes, properties);
 	return parsedNodesCombinations.map((parsedNodesCombination) => {
 		const container = document.createElement("div");
 		for (const node of parsedNodesCombination) {

@@ -11,7 +11,7 @@ test("Can parse template without control flow", () => {
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
-		'<p data-test="" aria-label="title">hello world</p><p>hello <span>Angular</span></p>',
+		'<p data-test="" aria-label="hello world">hello world</p><p>hello <span>Angular</span></p>',
 	);
 });
 
