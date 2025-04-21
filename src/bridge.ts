@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { parseTemplate } from "@angular/compiler";
 import { document } from "./dom.ts";
-import { parseAstNodes } from "./parse.ts";
+import { parseAstNodes } from "./parser.ts";
 import { getPropertiesFromComponent } from "./properties.ts";
 
 export const bridge = (path: string): string[] => {
