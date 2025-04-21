@@ -8,7 +8,12 @@ import {
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { document } from "./dom.ts";
-import type { Properties } from "./types.ts";
+import type { Properties, ParsedAttr } from "./types.ts";
+import {
+	generate3DCombinations,
+	generateCombinations,
+} from "./combinations.ts";
+import { parse, TSESTree } from "@typescript-eslint/typescript-estree";
 
 export const parseAstNodes = (nodes: TmplAstNode[], properties: Properties) => {
 	const parsedNodes = generate3DCombinations(
@@ -58,15 +63,44 @@ const parseElement = (
 		}
 	}
 
-	if (elementNode.inputs.length > 0) {
-		for (const input of elementNode.inputs) {
+	const attrsCombinations: ParsedAttr[][] = generateCombinations(
+		elementNode.inputs.map((input) => {
 			const { name, value } = input;
 			const source = (value as ASTWithSource).source || "";
-			const computedValue = properties.get(source) || "some random text";
-			element.setAttribute(name, computedValue);
+			// TODO: Consider if body's length could be more than 1.
+			const body = parse(source).body[0];
+			const expression = (body as TSESTree.ExpressionStatement).expression;
+			const values = parseExpressionIntoLiterals(expression, properties);
+			return { name, values };
+		}),
+	);
+	const parsedElementsCombinations = parseElementChildren(
+		element,
+		elementNode,
+		properties,
+	);
+	const result: Node[][] = [];
+	for (const attrs of attrsCombinations) {
+		for (const parsedElements of parsedElementsCombinations) {
+			// There should be only one element in parsedElements
+			for (const parsedElement of parsedElements) {
+				const clonedElement = parsedElement.cloneNode(true) as Element;
+				for (const attribute of attrs) {
+					clonedElement.setAttribute(attribute.name, attribute.value);
+				}
+				result.push([clonedElement]);
+			}
 		}
 	}
 
+	return result;
+};
+
+const parseElementChildren = (
+	element: Element,
+	elementNode: TmplAstElement,
+	properties: Properties,
+): Node[][] => {
 	if (elementNode.children.length > 0) {
 		const childrenCombinations = parseAstNodes(
 			elementNode.children,
@@ -147,28 +181,33 @@ const parseForBlock = (
 	return result;
 };
 
-// Generate all combinations of 3-D array of nodes
-// Example: Takes [[[div#1]],[[div#2]],[[div#3],[div#4,div#5]]] and outputs [[div#1,div#2,div#3],[div#1,div#2,div#4,div#5]]
-const generate3DCombinations = (arrays: Node[][][]): Node[][] => {
-	const result: Node[][] = [];
-
-	function backtrack(index: number, current: Node[]) {
-		if (index === arrays.length) {
-			result.push([...current]);
-			return;
-		}
-
-		for (const subArray of arrays[index]) {
-			for (const value of subArray) {
-				current.push(value);
-			}
-			backtrack(index + 1, current);
-			for (let i = 0; i < subArray.length; i++) {
-				current.pop();
-			}
-		}
+const parseExpressionIntoLiterals = (
+	expression: TSESTree.Expression,
+	properties: Properties,
+): string[] => {
+	if (
+		(expression.type as string) ===
+		TSESTree.AST_NODE_TYPES.ConditionalExpression
+	) {
+		const { consequent, alternate } =
+			expression as unknown as TSESTree.ConditionalExpression;
+		return [
+			...parseExpressionIntoLiterals(consequent, properties),
+			...parseExpressionIntoLiterals(alternate, properties),
+		];
 	}
 
-	backtrack(0, []);
-	return result;
+	if ((expression.type as string) === TSESTree.AST_NODE_TYPES.Literal) {
+		return [
+			(expression as unknown as TSESTree.Literal).value?.toString() ||
+				"some random value",
+		];
+	}
+
+	if ((expression.type as string) === TSESTree.AST_NODE_TYPES.Identifier) {
+		const name = (expression as unknown as TSESTree.Identifier).name || "";
+		return [properties.get(name) || "some random value"];
+	}
+
+	return [];
 };

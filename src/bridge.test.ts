@@ -61,3 +61,14 @@ test("Can parse template with @for without empty block", () => {
 		"<li>{{ user.name }}</li><li>{{ user.name }}</li>",
 	);
 });
+
+test("Can parse template with attribute binding", () => {
+	const path = resolve(
+		"src/__tests__/ternary-operator/ternary-operator.component.html",
+	);
+	const result = bridge(path);
+	assert.strictEqual(result.length, 3);
+	assert.strictEqual(result[0], '<p data-test="hi"> ternary-operator\n</p>');
+	assert.strictEqual(result[1], '<p data-test="hello"> ternary-operator\n</p>');
+	assert.strictEqual(result[2], '<p data-test="hey"> ternary-operator\n</p>');
+});

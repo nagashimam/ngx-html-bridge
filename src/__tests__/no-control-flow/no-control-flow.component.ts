@@ -10,11 +10,11 @@ export class NoControlFlowComponent {
 	protected title = "hello world";
 
 	// for testing purpose only
-	private title2 = "good night world";
-	public title3 = "good morning world";
+	protected title2 = "good night world";
+	private title3 = "good morning world";
 	title4 = "good bye world";
 
 	constructor() {
-		console.log(this.title2);
+		console.log(this.title3);
 	}
 }
