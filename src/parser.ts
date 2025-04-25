@@ -5,6 +5,9 @@ import {
 	TmplAstSwitchBlock,
 	TmplAstForLoopBlock,
 	TmplAstBoundText,
+	TmplAstLetDeclaration,
+	LiteralPrimitive,
+	PropertyRead,
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { document } from "./dom.ts";
@@ -13,13 +16,38 @@ import {
 	generate3DCombinations,
 	generateCombinations,
 } from "./combinations.ts";
-import { parse, TSESTree } from "@typescript-eslint/typescript-estree";
+import { parse } from "@typescript-eslint/typescript-estree";
+import type { TSESTree } from "@typescript-eslint/typescript-estree";
+import {
+	castAST,
+	castNode,
+	isTSESTreeConditionalExpression,
+	isTSESTreeIdentifier,
+	isTSESTreeLiteral,
+} from "./utils.ts";
 
 export const parseAstNodes = (nodes: TmplAstNode[], properties: Properties) => {
-	const parsedNodes = generate3DCombinations(
-		nodes.map((node) => parseEachNode(node, properties)),
-	);
-	return parsedNodes;
+	const parsedNodes: Node[][][] = [];
+	for (const node of nodes) {
+		if (node instanceof TmplAstLetDeclaration) {
+			const name = node.name;
+			const source = castAST<ASTWithSource>(node.value);
+			const ast = source.ast;
+			if (ast instanceof LiteralPrimitive) {
+				properties.set(name, ast.value);
+			}
+			if (ast instanceof PropertyRead) {
+				const value = properties.get(ast.name);
+				if (value !== undefined) {
+					properties.set(name, value);
+				}
+			}
+		} else {
+			parsedNodes.push(parseEachNode(node, properties));
+		}
+	}
+
+	return generate3DCombinations(parsedNodes);
 };
 
 const parseEachNode = (node: TmplAstNode, properties: Properties): Node[][] => {

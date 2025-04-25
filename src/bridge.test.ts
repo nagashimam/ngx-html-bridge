@@ -72,3 +72,13 @@ test("Can parse template with attribute binding", () => {
 	assert.strictEqual(result[1], '<p data-test="hello"> ternary-operator\n</p>');
 	assert.strictEqual(result[2], '<p data-test="hey"> ternary-operator\n</p>');
 });
+
+test("Can parse template with @let", () => {
+	const path = resolve("src/__tests__/let/let.component.html");
+	const result = bridge(path);
+	assert.strictEqual(result.length, 1);
+	assert.strictEqual(
+		result[0],
+		'<p data-foo="Goodbye" data-bar="Hello, World!">let works!</p>',
+	);
+});
