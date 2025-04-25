@@ -42,7 +42,7 @@ const parseEachNode = (node: TmplAstNode, properties: Properties): Node[][] => {
 		return [
 			[
 				document.createTextNode(
-					(node.value as ASTWithSource).source || "some random text",
+					castAST<ASTWithSource>(node.value).source || "some random text",
 				),
 			],
 		];
@@ -66,10 +66,11 @@ const parseElement = (
 	const attrsCombinations: ParsedAttr[][] = generateCombinations(
 		elementNode.inputs.map((input) => {
 			const { name, value } = input;
-			const source = (value as ASTWithSource).source || "";
+			const source = castAST<ASTWithSource>(value).source || "";
 			// TODO: Consider if body's length could be more than 1.
 			const body = parse(source).body[0];
-			const expression = (body as TSESTree.ExpressionStatement).expression;
+			const expression =
+				castNode<TSESTree.ExpressionStatement>(body).expression;
 			const values = parseExpressionIntoLiterals(expression, properties);
 			return { name, values };
 		}),
@@ -147,6 +148,7 @@ const parseSwitchBlock = (
 	return result;
 };
 
+// TODO: If array is literal value or element in properties, you know exactly how many times the block loops
 const parseForBlock = (
 	forBlock: TmplAstForLoopBlock,
 	properties: Properties,
@@ -185,27 +187,23 @@ const parseExpressionIntoLiterals = (
 	expression: TSESTree.Expression,
 	properties: Properties,
 ): string[] => {
-	if (
-		(expression.type as string) ===
-		TSESTree.AST_NODE_TYPES.ConditionalExpression
-	) {
+	if (isTSESTreeConditionalExpression(expression)) {
 		const { consequent, alternate } =
-			expression as unknown as TSESTree.ConditionalExpression;
+			castNode<TSESTree.ConditionalExpression>(expression);
 		return [
 			...parseExpressionIntoLiterals(consequent, properties),
 			...parseExpressionIntoLiterals(alternate, properties),
 		];
 	}
 
-	if ((expression.type as string) === TSESTree.AST_NODE_TYPES.Literal) {
-		return [
-			(expression as unknown as TSESTree.Literal).value?.toString() ||
-				"some random value",
-		];
+	if (isTSESTreeLiteral(expression)) {
+		const literalValue =
+			castNode<TSESTree.Literal>(expression).value?.toString();
+		return [literalValue || "some random value"];
 	}
 
-	if ((expression.type as string) === TSESTree.AST_NODE_TYPES.Identifier) {
-		const name = (expression as unknown as TSESTree.Identifier).name || "";
+	if (isTSESTreeIdentifier(expression)) {
+		const name = castNode<TSESTree.Identifier>(expression).name || "";
 		return [properties.get(name) || "some random value"];
 	}
 

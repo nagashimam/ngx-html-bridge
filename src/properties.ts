@@ -1,7 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import type { TSESTree } from "@typescript-eslint/typescript-estree";
-import { parse, AST_NODE_TYPES } from "@typescript-eslint/typescript-estree";
+import { parse } from "@typescript-eslint/typescript-estree";
 import type { Properties } from "./types.ts";
+import {
+	castNode,
+	isComponentClass,
+	isTSESClassDeclaration,
+	isTSESExportNamedDeclaration,
+	isTSESTreeIdentifier,
+	isTSEStreePropertyDefinition,
+} from "./utils.ts";
 
 export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	const properties = new Map<string, string>();
@@ -24,11 +32,19 @@ export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	const propertiesAccessibleFromTemplate =
 		getPropertiesAccessibleFromTemplate(classDeclaration);
 
+	// TODO: Consider case like `[attr.data-foo]="flag ? '': undefined"`.
+	// Simply rewriting value to "some random text" is not ideal for cases like above
 	for (const property of propertiesAccessibleFromTemplate) {
-		const name = (property.key as TSESTree.Identifier).name;
-		const initialValue =
-			(property.value as TSESTree.Literal).value?.toString() ||
-			"some random text";
+		const name = castNode<TSESTree.Identifier>(property.key).name;
+		const initialValue = (() => {
+			if (property.value === null) {
+				return "some random text";
+			}
+
+			const literalValue = castNode<TSESTree.Literal>(property.value);
+			return literalValue.value?.toString() || "some random text";
+		})();
+
 		properties.set(name, initialValue);
 	}
 
@@ -38,33 +54,47 @@ export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 const getComponentDeclaration = (
 	ast: TSESTree.Program,
 ): TSESTree.ClassDeclaration | undefined => {
-	const namedExport: TSESTree.ExportNamedDeclaration | undefined =
-		ast.body.find(
-			(body) =>
-				body.type === AST_NODE_TYPES.ExportNamedDeclaration &&
-				body.declaration?.type === AST_NODE_TYPES.ClassDeclaration &&
-				// TODO: Add options to specify component suffix
-				body.declaration?.id?.name.includes("Component"),
-		) as TSESTree.ExportNamedDeclaration | undefined;
-	return namedExport?.declaration as TSESTree.ClassDeclaration | undefined;
+	const namedExport: TSESTree.Node | undefined = ast.body.find(
+		(body) =>
+			isTSESExportNamedDeclaration(body) &&
+			isTSESClassDeclaration(body) &&
+			isComponentClass(body),
+	);
+
+	if (!namedExport) {
+		return undefined;
+	}
+
+	const declaration = castNode<TSESTree.ExportNamedDeclaration>(namedExport);
+	if (!declaration.declaration) {
+		return undefined;
+	}
+
+	return (
+		castNode<TSESTree.ClassDeclaration>(declaration.declaration) || undefined
+	);
 };
 
 const getPropertiesAccessibleFromTemplate = (
 	classDeclaration: TSESTree.ClassDeclaration,
 ) => {
-	return classDeclaration.body.body.filter((definition) => {
-		if (definition.type !== AST_NODE_TYPES.PropertyDefinition) {
-			return false;
-		}
+	return classDeclaration.body.body
+		.filter((classElement) => {
+			if (!isTSEStreePropertyDefinition(classElement)) {
+				return false;
+			}
 
-		if (definition.key.type !== AST_NODE_TYPES.Identifier) {
-			return false;
-		}
+			if (!isTSESTreeIdentifier(classElement.key)) {
+				return false;
+			}
 
-		if (definition.accessibility === "private") {
-			return false;
-		}
+			const propertyDefinition =
+				castNode<TSESTree.PropertyDefinition>(classElement);
+			if (propertyDefinition.accessibility === "private") {
+				return false;
+			}
 
-		return !!(definition as unknown as TSESTree.Literal);
-	}) as TSESTree.PropertyDefinition[];
+			return !!castNode<TSESTree.Literal>(classElement);
+		})
+		.map((definition) => castNode<TSESTree.PropertyDefinition>(definition));
 };
