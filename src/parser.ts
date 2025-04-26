@@ -242,5 +242,5 @@ const parseExpressionIntoLiterals = (
 		return [properties.get(name) || "some random value"];
 	}
 
-	return [];
+	return ["some random value"];
 };
