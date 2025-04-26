@@ -11,7 +11,7 @@ test("Can parse template without control flow", () => {
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
-		'<p data-test="" aria-label="hello world">hello world</p><p>hello <span>Angular</span></p>',
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-offset="0" data-test="" aria-label="hello world">hello world</p><p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="55">hello <span data-ngx-html-bridge-col="9" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="64">Angular</span></p>',
 	);
 });
 
@@ -20,10 +20,22 @@ test("Can parse template with @if", () => {
 	const result = bridge(path);
 
 	assert.strictEqual(result.length, 4);
-	assert.strictEqual(result[0], "<p>Both flagA and flagB are true</p>");
-	assert.strictEqual(result[1], "<p>Both flagA and flagC are true</p>");
-	assert.strictEqual(result[2], "<p>only flagA is true</p>");
-	assert.strictEqual(result[3], "<p>flagA is false</p>");
+	assert.strictEqual(
+		result[0],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="2" data-ngx-html-bridge-offset="34">Both flagA and flagB are true</p>',
+	);
+	assert.strictEqual(
+		result[1],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="4" data-ngx-html-bridge-offset="98">Both flagA and flagC are true</p>',
+	);
+	assert.strictEqual(
+		result[2],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="6" data-ngx-html-bridge-offset="151">only flagA is true</p>',
+	);
+	assert.strictEqual(
+		result[3],
+		'<p data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="9" data-ngx-html-bridge-offset="193">flagA is false</p>',
+	);
 });
 
 test("Can parse template with @switch", () => {
@@ -31,20 +43,35 @@ test("Can parse template with @switch", () => {
 	const result = bridge(path);
 
 	assert.strictEqual(result.length, 3);
-	assert.strictEqual(result[0], "<p>title is switch</p>");
-	assert.strictEqual(result[1], "<p>title is switch2</p>");
-	assert.strictEqual(result[2], "<p>title is not yet decided</p>");
+	assert.strictEqual(
+		result[0],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="2" data-ngx-html-bridge-offset="43">title is switch</p>',
+	);
+	assert.strictEqual(
+		result[1],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="5" data-ngx-html-bridge-offset="97">title is switch2</p>',
+	);
+	assert.strictEqual(
+		result[2],
+		'<p data-ngx-html-bridge-col="4" data-ngx-html-bridge-line="8" data-ngx-html-bridge-offset="142">title is not yet decided</p>',
+	);
 });
 
 test("Can parse template with @for", () => {
 	const path = resolve("src/__tests__/for/for.component.html");
 	const result = bridge(path);
 	assert.strictEqual(result.length, 3);
-	assert.strictEqual(result[0], "<li>There are no users.</li>");
-	assert.strictEqual(result[1], "<li>{{ user.name }}</li>");
+	assert.strictEqual(
+		result[0],
+		'<li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="3" data-ngx-html-bridge-offset="80">There are no users.</li>',
+	);
+	assert.strictEqual(
+		result[1],
+		'<li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li>',
+	);
 	assert.strictEqual(
 		result[2],
-		"<li>{{ user.name }}</li><li>{{ user.name }}</li>",
+		'<li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li><li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li>',
 	);
 });
 
@@ -55,10 +82,13 @@ test("Can parse template with @for without empty block", () => {
 	const result = bridge(path);
 	assert.strictEqual(result.length, 3);
 	assert.strictEqual(result[0], "");
-	assert.strictEqual(result[1], "<li>{{ user.name }}</li>");
+	assert.strictEqual(
+		result[1],
+		'<li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li>',
+	);
 	assert.strictEqual(
 		result[2],
-		"<li>{{ user.name }}</li><li>{{ user.name }}</li>",
+		'<li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li><li data-ngx-html-bridge-col="2" data-ngx-html-bridge-line="1" data-ngx-html-bridge-offset="42">{{ user.name }}</li>',
 	);
 });
 
@@ -68,9 +98,18 @@ test("Can parse template with attribute binding", () => {
 	);
 	const result = bridge(path);
 	assert.strictEqual(result.length, 3);
-	assert.strictEqual(result[0], '<p data-test="hi"> ternary-operator\n</p>');
-	assert.strictEqual(result[1], '<p data-test="hello"> ternary-operator\n</p>');
-	assert.strictEqual(result[2], '<p data-test="hey"> ternary-operator\n</p>');
+	assert.strictEqual(
+		result[0],
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-offset="0" data-test="hi"> ternary-operator\n</p>',
+	);
+	assert.strictEqual(
+		result[1],
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-offset="0" data-test="hello"> ternary-operator\n</p>',
+	);
+	assert.strictEqual(
+		result[2],
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-offset="0" data-test="hey"> ternary-operator\n</p>',
+	);
 });
 
 test("Can parse template with @let", () => {
@@ -79,6 +118,6 @@ test("Can parse template with @let", () => {
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
-		'<p data-foo="Goodbye" data-bar="Hello, World!">let works!</p>',
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="2" data-ngx-html-bridge-offset="44" data-foo="Goodbye" data-bar="Hello, World!">let works!</p>',
 	);
 });
