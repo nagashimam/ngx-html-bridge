@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { parseTemplate } from "@angular/compiler";
-import { document } from "./dom.ts";
-import { parseAstNodes } from "./parser.ts";
-import { getPropertiesFromComponent } from "./properties.ts";
+import { document } from "./dom.js";
+import { parseAstNodes } from "./parser.js";
+import { getPropertiesFromComponent } from "./properties.js";
 
 export const bridge = (path: string): string[] => {
 	// TODO: Add try-catch and handle errors

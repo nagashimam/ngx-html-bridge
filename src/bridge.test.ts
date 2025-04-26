@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert";
 import { resolve } from "node:path";
-import { bridge } from "./bridge.ts";
+import { bridge } from "../dist/bridge.js";
 
 test("Can parse template without control flow", () => {
 	const path = resolve(

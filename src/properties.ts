@@ -9,7 +9,7 @@ import {
 	isTSESExportNamedDeclaration,
 	isTSESTreeIdentifier,
 	isTSEStreePropertyDefinition,
-} from "./utils.ts";
+} from "./utils.js";
 
 export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	const properties = new Map<string, string>();

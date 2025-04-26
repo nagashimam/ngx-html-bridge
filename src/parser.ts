@@ -10,12 +10,12 @@ import {
 	PropertyRead,
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
-import { document } from "./dom.ts";
+import { document } from "./dom.js";
 import type { Properties, ParsedAttr } from "./types.ts";
 import {
 	generate3DCombinations,
 	generateCombinations,
-} from "./combinations.ts";
+} from "./combinations.js";
 import { parse } from "@typescript-eslint/typescript-estree";
 import type { TSESTree } from "@typescript-eslint/typescript-estree";
 import {
@@ -24,7 +24,7 @@ import {
 	isTSESTreeConditionalExpression,
 	isTSESTreeIdentifier,
 	isTSESTreeLiteral,
-} from "./utils.ts";
+} from "./utils.js";
 
 export const parseAstNodes = (nodes: TmplAstNode[], properties: Properties) => {
 	const parsedNodes: Node[][][] = [];

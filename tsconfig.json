@@ -9,8 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
     "moduleResolution": "nodenext",
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": false,
+    "declaration": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.test.ts", "**/__tests__/"]
