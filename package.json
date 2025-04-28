@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsc -w",
+    "build": "tsc",
     "test": "node --experimental-strip-types --test"
   },
   "keywords": [],
