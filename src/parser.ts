@@ -85,12 +85,17 @@ const parseElement = (
 	const name = elementNode.name;
 
 	const element = document.createElement(name);
-	const startSourceSpan = elementNode.sourceSpan.start;
-	const { col, line, offset } = startSourceSpan;
+	const { start, end } = elementNode.sourceSpan;
+	const { col, line, offset } = start;
+	const endOffset = end.offset;
 	const originalAttrPrefix = "data-ngx-html-bridge";
 	element.setAttribute(`${originalAttrPrefix}-col`, col.toString());
 	element.setAttribute(`${originalAttrPrefix}-line`, line.toString());
-	element.setAttribute(`${originalAttrPrefix}-offset`, offset.toString());
+	element.setAttribute(`${originalAttrPrefix}-start-offset`, offset.toString());
+	element.setAttribute(
+		`${originalAttrPrefix}-end-offset`,
+		endOffset.toString(),
+	);
 	if (elementNode.attributes.length > 0) {
 		for (const attribute of elementNode.attributes) {
 			const { name, value } = attribute;
