@@ -4,10 +4,14 @@ import { document } from "./dom.js";
 import { parseAstNodes } from "./parser.js";
 import { getPropertiesFromComponent } from "./properties.js";
 
-export const bridge = (path: string): string[] => {
+export const bridgeTemplateFile = (path: string): string[] => {
 	// TODO: Add try-catch and handle errors
-	const fileContents = readFileSync(path, "utf-8");
-	const ast = parseTemplate(fileContents, path, {
+	const template = readFileSync(path, "utf-8");
+	return bridgeTemplate(template, path);
+};
+
+export const bridgeTemplate = (template: string, path: string): string[] => {
+	const ast = parseTemplate(template, path, {
 		collectCommentNodes: true,
 	});
 	const properties = getPropertiesFromComponent(path);

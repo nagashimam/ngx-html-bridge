@@ -1,1 +1,1 @@
-export { bridge } from "./bridge.js";
+export { bridgeTemplateFile, bridgeTemplate } from "./bridge.js";

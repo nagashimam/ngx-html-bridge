@@ -1,13 +1,13 @@
 import test from "node:test";
 import assert from "node:assert";
 import { resolve } from "node:path";
-import { bridge } from "../dist/bridge.js";
+import { bridgeTemplateFile } from "../dist/bridge.js";
 
 test("Can parse template without control flow", () => {
 	const path = resolve(
 		"src/__tests__/no-control-flow/no-control-flow.component.html",
 	);
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
@@ -17,7 +17,7 @@ test("Can parse template without control flow", () => {
 
 test("Can parse template with @if", () => {
 	const path = resolve("src/__tests__/if/if.component.html");
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 
 	assert.strictEqual(result.length, 4);
 	assert.strictEqual(
@@ -40,7 +40,7 @@ test("Can parse template with @if", () => {
 
 test("Can parse template with @switch", () => {
 	const path = resolve("src/__tests__/switch/switch.component.html");
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 
 	assert.strictEqual(result.length, 3);
 	assert.strictEqual(
@@ -59,7 +59,7 @@ test("Can parse template with @switch", () => {
 
 test("Can parse template with @for", () => {
 	const path = resolve("src/__tests__/for/for.component.html");
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 	assert.strictEqual(result.length, 3);
 	assert.strictEqual(
 		result[0],
@@ -79,7 +79,7 @@ test("Can parse template with @for without empty block", () => {
 	const path = resolve(
 		"src/__tests__/for-without-empty/for-without-empty.component.html",
 	);
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 	assert.strictEqual(result.length, 3);
 	assert.strictEqual(result[0], "");
 	assert.strictEqual(
@@ -96,7 +96,7 @@ test("Can parse template with attribute binding", () => {
 	const path = resolve(
 		"src/__tests__/ternary-operator/ternary-operator.component.html",
 	);
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 	assert.strictEqual(result.length, 3);
 	assert.strictEqual(
 		result[0],
@@ -114,7 +114,7 @@ test("Can parse template with attribute binding", () => {
 
 test("Can parse template with @let", () => {
 	const path = resolve("src/__tests__/let/let.component.html");
-	const result = bridge(path);
+	const result = bridgeTemplateFile(path);
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
