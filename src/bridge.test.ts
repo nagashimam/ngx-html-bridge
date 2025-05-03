@@ -11,7 +11,7 @@ test("Can parse template without control flow", () => {
 	assert.strictEqual(result.length, 1);
 	assert.strictEqual(
 		result[0],
-		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-start-offset="0" data-ngx-html-bridge-end-offset="54" data-test="" aria-label="hello world">hello world</p><p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="1" data-ngx-html-bridge-start-offset="55" data-ngx-html-bridge-end-offset="88">hello <span data-ngx-html-bridge-col="9" data-ngx-html-bridge-line="1" data-ngx-html-bridge-start-offset="64" data-ngx-html-bridge-end-offset="84">Angular</span></p>',
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-start-offset="0" data-ngx-html-bridge-end-offset="44" aria-label="hello world">hello world</p><p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="1" data-ngx-html-bridge-start-offset="45" data-ngx-html-bridge-end-offset="78">hello <span data-ngx-html-bridge-col="9" data-ngx-html-bridge-line="1" data-ngx-html-bridge-start-offset="54" data-ngx-html-bridge-end-offset="74">Angular</span></p>',
 	);
 });
 

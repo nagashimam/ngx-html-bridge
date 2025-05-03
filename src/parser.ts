@@ -100,6 +100,17 @@ const parseElement = (
 		for (const attribute of elementNode.attributes) {
 			const { name, value } = attribute;
 			element.setAttribute(name, value);
+
+			const attrStart = attribute.sourceSpan.start;
+			const attrEnd = attribute.sourceSpan.end;
+			element.setAttribute(
+				`${originalAttrPrefix}-${name}-start-offset`,
+				attrStart.offset.toString(),
+			);
+			element.setAttribute(
+				`${originalAttrPrefix}-${name}-end-offset`,
+				attrEnd.offset.toString(),
+			);
 		}
 	}
 
