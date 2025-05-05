@@ -8,6 +8,7 @@ import {
 	TmplAstLetDeclaration,
 	LiteralPrimitive,
 	PropertyRead,
+	TmplAstTemplate,
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { document } from "./dom.js";
@@ -75,6 +76,13 @@ const parseEachNode = (node: TmplAstNode, properties: Properties): Node[][] => {
 			],
 		];
 	}
+
+	if (node instanceof TmplAstTemplate) {
+		// Traditional Angular structural directives come here
+		// TODO: Handle template nodes
+		return parseAstNodes(node.children, properties);
+	}
+
 	return [[]];
 };
 

@@ -7,6 +7,7 @@ import { getPropertiesFromComponent } from "./properties.js";
 export const bridgeTemplateFile = (path: string): string[] => {
 	// TODO: Add try-catch and handle errors
 	const template = readFileSync(path, "utf-8");
+	console.log(template);
 	return bridgeTemplate(template, path);
 };
 

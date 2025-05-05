@@ -121,3 +121,14 @@ test("Can parse template with @let", () => {
 		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="2" data-ngx-html-bridge-start-offset="44" data-ngx-html-bridge-end-offset="105" data-foo="Goodbye" data-bar="Hello, World!">let works!</p>',
 	);
 });
+
+// To be implemented
+test("Can parse template with *ngIf", () => {
+	const path = resolve("src/__tests__/ngif/ngif.component.html");
+	const result = bridgeTemplateFile(path);
+	assert.strictEqual(result.length, 1);
+	assert.strictEqual(
+		result[0],
+		'<p data-ngx-html-bridge-col="0" data-ngx-html-bridge-line="0" data-ngx-html-bridge-start-offset="0" data-ngx-html-bridge-end-offset="31">ngif works!</p>',
+	);
+});
