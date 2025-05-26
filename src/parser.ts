@@ -11,7 +11,7 @@ import {
 } from "@angular/compiler";
 import type { ASTWithSource, TmplAstNode } from "@angular/compiler";
 import { document } from "./dom.js";
-import type { Properties, ParsedAttr } from "./types.ts";
+import type { Properties, ParsedAttr, Attr } from "./types.ts";
 import {
 	generate3DCombinations,
 	generateCombinations,
@@ -114,18 +114,22 @@ const parseElement = (
 		}
 	}
 
-	const attrsCombinations: ParsedAttr[][] = generateCombinations(
-		elementNode.inputs.map((input) => {
-			const { name, value } = input;
-			const source = castAST<ASTWithSource>(value).source || "";
-			// TODO: Consider if body's length could be more than 1.
-			const body = parse(source).body[0];
-			const expression =
-				castNode<TSESTree.ExpressionStatement>(body).expression;
-			const values = parseExpressionIntoLiterals(expression, properties);
-			return { name, values };
-		}),
-	);
+	const attrs: Attr[] = [];
+	for (const input of elementNode.inputs) {
+		const { name, value } = input;
+		const attributeNameRegex = /^[a-zA-Z_][a-zA-Z0-9_.:-]*$/;
+		if (!attributeNameRegex.test(name)) {
+			continue;
+		}
+
+		const source = castAST<ASTWithSource>(value).source || "";
+		// TODO: Consider if body's length could be more than 1.
+		const body = parse(source).body[0];
+		const expression = castNode<TSESTree.ExpressionStatement>(body).expression;
+		const values = parseExpressionIntoLiterals(expression, properties);
+		attrs.push({ name, values });
+	}
+	const attrsCombinations: ParsedAttr[][] = generateCombinations(attrs);
 	const parsedElementsCombinations = parseElementChildren(
 		element,
 		elementNode,
