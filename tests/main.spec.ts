@@ -68,3 +68,16 @@ test("parseAngularTemplate returns expected HTML for @for block with @empty", ()
 		].sort(),
 	);
 });
+
+test("parseAngularTemplate returns expected HTML for @defer block", () => {
+	const templatePath = "tests/sample/src/app/defer/defer.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"<p>Deferred content loaded!</p>",
+			"<p>Placeholder content</p>",
+			"<p>Loading...</p>",
+		].sort(),
+	);
+});

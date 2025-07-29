@@ -1,6 +1,7 @@
 import {
 	ParsedTemplate,
 	TmplAstBoundText,
+	TmplAstDeferredBlock,
 	TmplAstElement,
 	TmplAstForLoopBlock,
 	TmplAstIfBlock,
@@ -17,6 +18,7 @@ import { transformTmplAstIfBlock } from "./if";
 import { transformTmplAstSwitchBlock } from "./switch";
 import { transformTmplAstForLoopBlock } from "./for";
 import { transformTmplAstBoundText } from "./bound-text";
+import { transformTmplAstDeferredBlock } from "./defer";
 
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
@@ -52,6 +54,10 @@ const transformTmplAstNode: TransformTmplAstNode<TmplAstNode> = (astNode) => {
 
 	if (astNode instanceof TmplAstForLoopBlock) {
 		return transformTmplAstForLoopBlock(astNode, transformTmplAstNodes);
+	}
+
+	if (astNode instanceof TmplAstDeferredBlock) {
+		return transformTmplAstDeferredBlock(astNode, transformTmplAstNodes);
 	}
 
 	return [[]];
