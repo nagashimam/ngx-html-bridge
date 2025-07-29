@@ -117,3 +117,15 @@ test("parseAngularTemplate returns expected HTML for *ngIf with then", () => {
 		].sort(),
 	);
 });
+
+test("parseAngularTemplate returns expected HTML for @switch with single case and no default", () => {
+	const templatePath = "tests/sample/src/app/switch-without-default/switch-without-default.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"<p>Case 1</p>",
+			"",
+		].sort(),
+	);
+});

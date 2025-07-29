@@ -12,5 +12,9 @@ export const transformTmplAstSwitchBlock: TransformTmplAstNodeRecursivly<
 		);
 	}
 
+	if (switchBlock.cases.length === 1) {
+		result.push([]);
+	}
+
 	return result;
 };
