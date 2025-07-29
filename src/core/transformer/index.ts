@@ -7,6 +7,7 @@ import {
 	TmplAstIfBlock,
 	TmplAstNode,
 	TmplAstSwitchBlock,
+	TmplAstTemplate,
 	TmplAstText,
 } from "@angular/compiler";
 
@@ -19,45 +20,82 @@ import { transformTmplAstSwitchBlock } from "./switch";
 import { transformTmplAstForLoopBlock } from "./for";
 import { transformTmplAstBoundText } from "./bound-text";
 import { transformTmplAstDeferredBlock } from "./defer";
+import { transformTmplAstTemplate } from "./template";
 
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
+	tmplAstTemplates: TmplAstTemplate[],
 ): Node[][] => {
-	return transformTmplAstNodes(parsedTemplate.nodes);
+	return transformTmplAstNodes(parsedTemplate.nodes, tmplAstTemplates);
 };
 
-const transformTmplAstNodes: TransformTmplAstNodes = (astNodes) => {
-	const parsed = astNodes.map((astNode) => transformTmplAstNode(astNode));
+const transformTmplAstNodes: TransformTmplAstNodes = (
+	astNodes,
+	tmplAstTemplates,
+) => {
+	const parsed = astNodes.map((astNode) =>
+		transformTmplAstNode(astNode, tmplAstTemplates),
+	);
 	return generate3DCombinations(parsed);
 };
 
-const transformTmplAstNode: TransformTmplAstNode<TmplAstNode> = (astNode) => {
+const transformTmplAstNode: TransformTmplAstNode<TmplAstNode> = (
+	astNode,
+	tmplAstTemplates,
+) => {
+	if (astNode instanceof TmplAstTemplate) {
+		return transformTmplAstTemplate(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
+	}
 	if (astNode instanceof TmplAstElement) {
-		return transformTmplAstElement(astNode, transformTmplAstNodes);
+		return transformTmplAstElement(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
 	}
 
 	if (astNode instanceof TmplAstText) {
-		return transformTmplAstText(astNode);
+		return transformTmplAstText(astNode, tmplAstTemplates);
 	}
 
 	if (astNode instanceof TmplAstBoundText) {
-		return transformTmplAstBoundText(astNode);
+		return transformTmplAstBoundText(astNode, tmplAstTemplates);
 	}
 
 	if (astNode instanceof TmplAstIfBlock) {
-		return transformTmplAstIfBlock(astNode, transformTmplAstNodes);
+		return transformTmplAstIfBlock(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
 	}
 
 	if (astNode instanceof TmplAstSwitchBlock) {
-		return transformTmplAstSwitchBlock(astNode, transformTmplAstNodes);
+		return transformTmplAstSwitchBlock(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
 	}
 
 	if (astNode instanceof TmplAstForLoopBlock) {
-		return transformTmplAstForLoopBlock(astNode, transformTmplAstNodes);
+		return transformTmplAstForLoopBlock(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
 	}
 
 	if (astNode instanceof TmplAstDeferredBlock) {
-		return transformTmplAstDeferredBlock(astNode, transformTmplAstNodes);
+		return transformTmplAstDeferredBlock(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
 	}
 
 	return [[]];

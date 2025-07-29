@@ -3,7 +3,7 @@ import { transformParsedTemplate } from "./core/transformer";
 import { generateHTMLs } from "./core/generator";
 
 export const parseAngularTemplate = (templatePath: string): string[] => {
-	const astNodes = parseTemplateFile(templatePath);
-	const nodes = transformParsedTemplate(astNodes);
+	const { parsedTemplate, tmplAstTemplates } = parseTemplateFile(templatePath);
+	const nodes = transformParsedTemplate(parsedTemplate, tmplAstTemplates);
 	return generateHTMLs(nodes);
 };

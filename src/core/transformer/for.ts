@@ -3,13 +3,14 @@ import { TransformTmplAstNodeRecursivly } from "../../types";
 
 export const transformTmplAstForLoopBlock: TransformTmplAstNodeRecursivly<
 	TmplAstForLoopBlock
-> = (forBlock, transformTmplAstNodes) => {
+> = (forBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	// Handle case for no loop
 	if (forBlock.empty && forBlock.empty.children.length > 0) {
 		for (const parsedEmptyBlock of transformTmplAstNodes(
 			forBlock.empty.children,
+			tmplAstTemplates,
 		)) {
 			result.push(parsedEmptyBlock);
 		}
@@ -18,17 +19,21 @@ export const transformTmplAstForLoopBlock: TransformTmplAstNodeRecursivly<
 	}
 
 	// Handle case for loop once
-	for (const parsedForBlock of transformTmplAstNodes(forBlock.children)) {
+	for (const parsedForBlock of transformTmplAstNodes(
+		forBlock.children,
+		tmplAstTemplates,
+	)) {
 		result.push(parsedForBlock);
 	}
 
 	// Handle case for loop twice
-	for (const parsedForBlock of transformTmplAstNodes([
-		...forBlock.children,
-		...forBlock.children,
-	])) {
+	for (const parsedForBlock of transformTmplAstNodes(
+		[...forBlock.children, ...forBlock.children],
+		tmplAstTemplates,
+	)) {
 		result.push(parsedForBlock);
 	}
 
 	return result;
 };
+

@@ -3,7 +3,7 @@ import { TransformTmplAstNodeRecursivly } from "../../types";
 
 export const transformTmplAstIfBlock: TransformTmplAstNodeRecursivly<
 	TmplAstIfBlock
-> = (ifBlock, transformTmplAstNodes) => {
+> = (ifBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	if (ifBlock.branches.length === 1) {
@@ -11,7 +11,7 @@ export const transformTmplAstIfBlock: TransformTmplAstNodeRecursivly<
 		result.push([]);
 	}
 	for (const branch of ifBlock.branches) {
-		result.push(...transformTmplAstNodes(branch.children));
+		result.push(...transformTmplAstNodes(branch.children, tmplAstTemplates));
 	}
 
 	return result;

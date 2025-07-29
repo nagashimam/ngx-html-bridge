@@ -81,3 +81,39 @@ test("parseAngularTemplate returns expected HTML for @defer block", () => {
 		].sort(),
 	);
 });
+
+test("parseAngularTemplate returns expected HTML for *ngIf", () => {
+	const templatePath = "tests/sample/src/app/ngif/ngif.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"<div><p>Condition is true!</p></div>",
+			"<p>Condition is false!</p>",
+		].sort(),
+	);
+});
+
+test("parseAngularTemplate returns expected HTML for *ngIf without else", () => {
+	const templatePath = "tests/sample/src/app/ngif-without-else/ngif-without-else.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"<div><p>Condition is true!</p></div>",
+			"",
+		].sort(),
+	);
+});
+
+test("parseAngularTemplate returns expected HTML for *ngIf with then", () => {
+	const templatePath = "tests/sample/src/app/ngif-with-then/ngif-with-then.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"<p>Condition is true (then block)!</p>",
+			"",
+		].sort(),
+	);
+});

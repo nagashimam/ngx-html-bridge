@@ -1,0 +1,6 @@
+<div *ngIf="condition; else elseBlock">
+  <p>Condition is true!</p>
+</div>
+<ng-template #elseBlock>
+  <p>Condition is false!</p>
+</ng-template>

@@ -3,24 +3,32 @@ import { TransformTmplAstNodeRecursivly } from "../../types";
 
 export const transformTmplAstDeferredBlock: TransformTmplAstNodeRecursivly<
 	TmplAstDeferredBlock
-> = (deferBlock, transformTmplAstNodes) => {
+> = (deferBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	// Deferred content
 	if (deferBlock.children) {
-		result.push(...transformTmplAstNodes(deferBlock.children));
+		result.push(
+			...transformTmplAstNodes(deferBlock.children, tmplAstTemplates),
+		);
 	}
 
 	// Placeholder content
 	if (deferBlock.placeholder) {
-		result.push(...transformTmplAstNodes(deferBlock.placeholder.children));
+		result.push(
+			...transformTmplAstNodes(
+				deferBlock.placeholder.children,
+				tmplAstTemplates,
+			),
+		);
 	}
 
 	// Loading content
 	if (deferBlock.loading) {
-		result.push(...transformTmplAstNodes(deferBlock.loading.children));
+		result.push(
+			...transformTmplAstNodes(deferBlock.loading.children, tmplAstTemplates),
+		);
 	}
 
 	return result;
 };
-
