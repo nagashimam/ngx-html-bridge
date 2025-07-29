@@ -32,14 +32,13 @@ The tool can be used as a library in your own scripts. Here is a basic example:
 
 ```typescript
 // examples/basic-usage.ts
-import { parseTemplate } from '../src/main';
-import * as fs from 'fs';
+import { parseAngularTemplate } from '../src/main';
 
-// Read an Angular template from a file
-const template = fs.readFileSync('path/to/your/template.html', 'utf-8');
+// Define the path to your Angular template
+const templatePath = 'path/to/your/template.html';
 
 // Parse the template to get all possible HTML string outputs
-const htmlVariations = parseTemplate(template);
+const htmlVariations = parseAngularTemplate(templatePath);
 
 // Log the variations to the console
 console.log(htmlVariations);
