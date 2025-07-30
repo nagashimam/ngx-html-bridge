@@ -57,7 +57,7 @@ These commands should be run from the project root.
 
 ## 5. Coding Conventions & Style Guide
 
-- **Style:** Follow standard TypeScript best practices.
+- **Style:** Follow standard TypeScript best practices. Among others, follow [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
 - **Commit Messages:** Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. (e.g., `feat(core): add new feature`, `fix(parser): resolve bug in html parsing`)
 - **Testing:** All new features or bug fixes must be accompanied by unit tests with a high level of code coverage.
 - **Documentation:** Public APIs must have TSDoc comments.

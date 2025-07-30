@@ -1,7 +1,16 @@
 import { TmplAstIfBlock } from "@angular/compiler";
-import { TransformTmplAstNodeRecursivly } from "../../types";
+import { RecursiveTmplAstNodeTransformer } from "../../types";
 
-export const transformTmplAstIfBlock: TransformTmplAstNodeRecursivly<
+/**
+ * Transforms a TmplAstIfBlock node into a 2D array of DOM Nodes.
+ * It processes each branch of the if block and adds an empty array if no else branch is present.
+ *
+ * @param ifBlock The TmplAstIfBlock node to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @param transformTmplAstNodes The recursive function to transform child AST nodes.
+ * @returns A 2D array of DOM Nodes representing the transformed if block.
+ */
+export const transformTmplAstIfBlock: RecursiveTmplAstNodeTransformer<
 	TmplAstIfBlock
 > = (ifBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];

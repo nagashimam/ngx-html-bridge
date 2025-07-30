@@ -1,7 +1,16 @@
 import { TmplAstForLoopBlock } from "@angular/compiler";
-import { TransformTmplAstNodeRecursivly } from "../../types";
+import { RecursiveTmplAstNodeTransformer } from "../../types";
 
-export const transformTmplAstForLoopBlock: TransformTmplAstNodeRecursivly<
+/**
+ * Transforms a TmplAstForLoopBlock node into a 2D array of DOM Nodes.
+ * It handles zero, one, and two iterations of the loop, including the @empty block.
+ *
+ * @param forBlock The TmplAstForLoopBlock node to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @param transformTmplAstNodes The recursive function to transform child AST nodes.
+ * @returns A 2D array of DOM Nodes representing the transformed for loop.
+ */
+export const transformTmplAstForLoopBlock: RecursiveTmplAstNodeTransformer<
 	TmplAstForLoopBlock
 > = (forBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];

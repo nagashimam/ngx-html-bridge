@@ -12,7 +12,7 @@ import {
 } from "@angular/compiler";
 
 import { transformTmplAstText } from "./text";
-import { TransformTmplAstNode, TransformTmplAstNodes } from "../../types";
+import { TmplAstNodeTransformer, TmplAstNodesTransformer } from "../../types";
 import { transformTmplAstElement } from "./element";
 import { generate3DCombinations } from "./cartesian-product";
 import { transformTmplAstIfBlock } from "./if";
@@ -22,6 +22,13 @@ import { transformTmplAstBoundText } from "./bound-text";
 import { transformTmplAstDeferredBlock } from "./defer";
 import { transformTmplAstTemplate } from "./template";
 
+/**
+ * Transforms a ParsedTemplate object into a 2D array of DOM Nodes.
+ *
+ * @param parsedTemplate The ParsedTemplate object to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @returns A 2D array of DOM Nodes representing the transformed template.
+ */
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
 	tmplAstTemplates: TmplAstTemplate[],
@@ -29,7 +36,14 @@ export const transformParsedTemplate = (
 	return transformTmplAstNodes(parsedTemplate.nodes, tmplAstTemplates);
 };
 
-const transformTmplAstNodes: TransformTmplAstNodes = (
+/**
+ * Transforms an array of TmplAstNode objects into a 2D array of DOM Nodes.
+ *
+ * @param astNodes The array of TmplAstNode objects to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @returns A 2D array of DOM Nodes representing the transformed AST nodes.
+ */
+const transformTmplAstNodes: TmplAstNodesTransformer = (
 	astNodes,
 	tmplAstTemplates,
 ) => {
@@ -39,7 +53,14 @@ const transformTmplAstNodes: TransformTmplAstNodes = (
 	return generate3DCombinations(parsed);
 };
 
-const transformTmplAstNode: TransformTmplAstNode<TmplAstNode> = (
+/**
+ * Transforms a single TmplAstNode object into a 2D array of DOM Nodes.
+ *
+ * @param astNode The TmplAstNode object to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @returns A 2D array of DOM Nodes representing the transformed AST node.
+ */
+const transformTmplAstNode: TmplAstNodeTransformer<TmplAstNode> = (
 	astNode,
 	tmplAstTemplates,
 ) => {

@@ -1,7 +1,16 @@
 import { TmplAstDeferredBlock } from "@angular/compiler";
-import { TransformTmplAstNodeRecursivly } from "../../types";
+import { RecursiveTmplAstNodeTransformer } from "../../types";
 
-export const transformTmplAstDeferredBlock: TransformTmplAstNodeRecursivly<
+/**
+ * Transforms a TmplAstDeferredBlock node into a 2D array of DOM Nodes.
+ * It processes the deferred content, placeholder content, and loading content.
+ *
+ * @param deferBlock The TmplAstDeferredBlock node to transform.
+ * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
+ * @param transformTmplAstNodes The recursive function to transform child AST nodes.
+ * @returns A 2D array of DOM Nodes representing the transformed deferred block.
+ */
+export const transformTmplAstDeferredBlock: RecursiveTmplAstNodeTransformer<
 	TmplAstDeferredBlock
 > = (deferBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];

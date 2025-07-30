@@ -1,17 +1,17 @@
 import type { TmplAstNode, TmplAstTemplate } from "@angular/compiler";
 
-export type TransformTmplAstNodes = (
+export type TmplAstNodesTransformer = (
 	nodes: TmplAstNode[],
 	tmplAstTemplates: TmplAstTemplate[],
 ) => Node[][];
 
-export type TransformTmplAstNode<T extends TmplAstNode> = (
+export type TmplAstNodeTransformer<T extends TmplAstNode> = (
 	node: T,
 	tmplAstTemplate: TmplAstTemplate[],
 ) => Node[][];
 
-export type TransformTmplAstNodeRecursivly<T extends TmplAstNode> = (
+export type RecursiveTmplAstNodeTransformer<T extends TmplAstNode> = (
 	node: T,
 	tmplAstTemplate: TmplAstTemplate[],
-	transformTmplAstNode: TransformTmplAstNodes,
+	transformTmplAstNode: TmplAstNodesTransformer,
 ) => Node[][];
