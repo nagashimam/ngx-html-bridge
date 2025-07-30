@@ -1,5 +1,5 @@
 import { TmplAstElement } from "@angular/compiler";
-import { RecursiveTmplAstNodeTransformer } from "../../types";
+import { TmplAstBranchNodeTransformer } from "../../types";
 import { document } from "../dom";
 
 /**
@@ -11,7 +11,7 @@ import { document } from "../dom";
  * @param transformTmplAstNodes The recursive function to transform child AST nodes.
  * @returns A 2D array of DOM Nodes representing the transformed element.
  */
-export const transformTmplAstElement: RecursiveTmplAstNodeTransformer<
+export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	TmplAstElement
 > = (element, tmplAstTemplates, transformTmplAstNodes) => {
 	if (element.name === "ng-container") {

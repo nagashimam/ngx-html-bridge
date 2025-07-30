@@ -1,5 +1,5 @@
 import { TmplAstTemplate } from "@angular/compiler";
-import { RecursiveTmplAstNodeTransformer } from "../../types";
+import { TmplAstBranchNodeTransformer } from "../../types";
 import { transformTmplAstTemplateNgIf } from "./ng-if";
 
 /**
@@ -11,7 +11,7 @@ import { transformTmplAstTemplateNgIf } from "./ng-if";
  * @param transformTmplAstNodes The recursive function to transform child AST nodes.
  * @returns A 2D array of DOM Nodes representing the transformed template.
  */
-export const transformTmplAstTemplate: RecursiveTmplAstNodeTransformer<
+export const transformTmplAstTemplate: TmplAstBranchNodeTransformer<
 	TmplAstTemplate
 > = (template, templates, transformTmplAstNodes) => {
 	if (isNgIf(template)) {

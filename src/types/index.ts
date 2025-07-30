@@ -5,13 +5,17 @@ export type TmplAstNodesTransformer = (
 	tmplAstTemplates: TmplAstTemplate[],
 ) => Node[][];
 
-export type TmplAstNodeTransformer<T extends TmplAstNode> = (
+export type TmplAstLeafNodeTransformer<T extends TmplAstNode> = (
 	node: T,
-	tmplAstTemplate: TmplAstTemplate[],
 ) => Node[][];
 
-export type RecursiveTmplAstNodeTransformer<T extends TmplAstNode> = (
+export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 	node: T,
-	tmplAstTemplate: TmplAstTemplate[],
-	transformTmplAstNode: TmplAstNodesTransformer,
+	tmplAstTemplates: TmplAstTemplate[],
+	tmplAstNodesTransformer: TmplAstNodesTransformer,
+) => Node[][];
+
+export type TmplAstNodeDispatcher = (
+	astNode: TmplAstNode,
+	tmplAstTemplates: TmplAstTemplate[],
 ) => Node[][];

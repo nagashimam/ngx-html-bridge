@@ -1,5 +1,5 @@
 import { TmplAstIfBlock } from "@angular/compiler";
-import { RecursiveTmplAstNodeTransformer } from "../../types";
+import { TmplAstBranchNodeTransformer } from "../../types";
 
 /**
  * Transforms a TmplAstIfBlock node into a 2D array of DOM Nodes.
@@ -10,7 +10,7 @@ import { RecursiveTmplAstNodeTransformer } from "../../types";
  * @param transformTmplAstNodes The recursive function to transform child AST nodes.
  * @returns A 2D array of DOM Nodes representing the transformed if block.
  */
-export const transformTmplAstIfBlock: RecursiveTmplAstNodeTransformer<
+export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 	TmplAstIfBlock
 > = (ifBlock, tmplAstTemplates, transformTmplAstNodes) => {
 	const result: Node[][] = [];

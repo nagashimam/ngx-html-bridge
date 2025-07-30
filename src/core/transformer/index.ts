@@ -5,14 +5,13 @@ import {
 	TmplAstElement,
 	TmplAstForLoopBlock,
 	TmplAstIfBlock,
-	TmplAstNode,
 	TmplAstSwitchBlock,
 	TmplAstTemplate,
 	TmplAstText,
 } from "@angular/compiler";
 
 import { transformTmplAstText } from "./text";
-import { TmplAstNodeTransformer, TmplAstNodesTransformer } from "../../types";
+import { TmplAstNodesTransformer, TmplAstNodeDispatcher } from "../../types";
 import { transformTmplAstElement } from "./element";
 import { generate3DCombinations } from "./cartesian-product";
 import { transformTmplAstIfBlock } from "./if";
@@ -60,33 +59,10 @@ const transformTmplAstNodes: TmplAstNodesTransformer = (
  * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
  * @returns A 2D array of DOM Nodes representing the transformed AST node.
  */
-const transformTmplAstNode: TmplAstNodeTransformer<TmplAstNode> = (
+const transformTmplAstNode: TmplAstNodeDispatcher = (
 	astNode,
 	tmplAstTemplates,
 ) => {
-	if (astNode instanceof TmplAstTemplate) {
-		return transformTmplAstTemplate(
-			astNode,
-			tmplAstTemplates,
-			transformTmplAstNodes,
-		);
-	}
-	if (astNode instanceof TmplAstElement) {
-		return transformTmplAstElement(
-			astNode,
-			tmplAstTemplates,
-			transformTmplAstNodes,
-		);
-	}
-
-	if (astNode instanceof TmplAstText) {
-		return transformTmplAstText(astNode, tmplAstTemplates);
-	}
-
-	if (astNode instanceof TmplAstBoundText) {
-		return transformTmplAstBoundText(astNode, tmplAstTemplates);
-	}
-
 	if (astNode instanceof TmplAstIfBlock) {
 		return transformTmplAstIfBlock(
 			astNode,
@@ -117,6 +93,30 @@ const transformTmplAstNode: TmplAstNodeTransformer<TmplAstNode> = (
 			tmplAstTemplates,
 			transformTmplAstNodes,
 		);
+	}
+
+	if (astNode instanceof TmplAstTemplate) {
+		return transformTmplAstTemplate(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
+	}
+
+	if (astNode instanceof TmplAstElement) {
+		return transformTmplAstElement(
+			astNode,
+			tmplAstTemplates,
+			transformTmplAstNodes,
+		);
+	}
+
+	if (astNode instanceof TmplAstText) {
+		return transformTmplAstText(astNode);
+	}
+
+	if (astNode instanceof TmplAstBoundText) {
+		return transformTmplAstBoundText(astNode);
 	}
 
 	return [[]];
