@@ -39,6 +39,8 @@ The project is a standalone parser tool built with TypeScript.
 │   └── main.spec.ts
 ├── examples/               # Example usage scripts or templates
 │   └── basic-usage.ts
+├── scripts/               # Scripts for simplifying dev chores
+│   └── extract-attributes.ts
 ├── package.json            # Project dependencies and scripts
 ├── tsconfig.json           # TypeScript configuration
 ├── .biome.json             # Biome configuration

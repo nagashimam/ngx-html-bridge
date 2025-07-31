@@ -95,37 +95,37 @@ test("parseAngularTemplate returns expected HTML for *ngIf", () => {
 });
 
 test("parseAngularTemplate returns expected HTML for *ngIf without else", () => {
-	const templatePath = "tests/sample/src/app/ngif-without-else/ngif-without-else.html";
+	const templatePath =
+		"tests/sample/src/app/ngif-without-else/ngif-without-else.html";
 	const result = parseAngularTemplate(templatePath);
 	assert.deepStrictEqual(
 		result.sort(),
-		[
-			"<div><p>Condition is true!</p></div>",
-			"",
-		].sort(),
+		["<div><p>Condition is true!</p></div>", ""].sort(),
 	);
 });
 
 test("parseAngularTemplate returns expected HTML for *ngIf with then", () => {
-	const templatePath = "tests/sample/src/app/ngif-with-then/ngif-with-then.html";
+	const templatePath =
+		"tests/sample/src/app/ngif-with-then/ngif-with-then.html";
 	const result = parseAngularTemplate(templatePath);
 	assert.deepStrictEqual(
 		result.sort(),
-		[
-			"<p>Condition is true (then block)!</p>",
-			"",
-		].sort(),
+		["<p>Condition is true (then block)!</p>", ""].sort(),
 	);
 });
 
 test("parseAngularTemplate returns expected HTML for @switch with single case and no default", () => {
-	const templatePath = "tests/sample/src/app/switch-without-default/switch-without-default.html";
+	const templatePath =
+		"tests/sample/src/app/switch-without-default/switch-without-default.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(result.sort(), ["<p>Case 1</p>", ""].sort());
+});
+
+test("parseAngularTemplate returns expected HTML for attributes", () => {
+	const templatePath = "tests/sample/src/app/attr/attr.html";
 	const result = parseAngularTemplate(templatePath);
 	assert.deepStrictEqual(
 		result.sort(),
-		[
-			"<p>Case 1</p>",
-			"",
-		].sort(),
+		['<p lang="ja">attr works!</p>'].sort(),
 	);
 });

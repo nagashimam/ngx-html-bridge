@@ -19,3 +19,5 @@ export type TmplAstNodeDispatcher = (
 	astNode: TmplAstNode,
 	tmplAstTemplates: TmplAstTemplate[],
 ) => Node[][];
+
+export type Attr = { name: string; value: string };
