@@ -11,7 +11,11 @@ import {
 } from "@angular/compiler";
 
 import { transformTmplAstText } from "./text";
-import { TmplAstNodesTransformer, TmplAstNodeDispatcher } from "../../types";
+import {
+	TmplAstNodesTransformer,
+	TmplAstNodeDispatcher,
+	Properties,
+} from "../../types";
 import { transformTmplAstElement } from "./element";
 import { generate3DCombinations } from "./cartesian-product";
 import { transformTmplAstIfBlock } from "./if";
@@ -31,8 +35,13 @@ import { transformTmplAstTemplate } from "./template";
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
 	tmplAstTemplates: TmplAstTemplate[],
+	properties: Properties,
 ): Node[][] => {
-	return transformTmplAstNodes(parsedTemplate.nodes, tmplAstTemplates);
+	return transformTmplAstNodes(
+		parsedTemplate.nodes,
+		tmplAstTemplates,
+		properties,
+	);
 };
 
 /**
@@ -45,9 +54,10 @@ export const transformParsedTemplate = (
 const transformTmplAstNodes: TmplAstNodesTransformer = (
 	astNodes,
 	tmplAstTemplates,
+	properties,
 ) => {
 	const parsed = astNodes.map((astNode) =>
-		transformTmplAstNode(astNode, tmplAstTemplates),
+		transformTmplAstNode(astNode, tmplAstTemplates, properties),
 	);
 	return generate3DCombinations(parsed);
 };
@@ -62,11 +72,14 @@ const transformTmplAstNodes: TmplAstNodesTransformer = (
 const transformTmplAstNode: TmplAstNodeDispatcher = (
 	astNode,
 	tmplAstTemplates,
+	properties,
 ) => {
 	if (astNode instanceof TmplAstIfBlock) {
 		return transformTmplAstIfBlock(
 			astNode,
 			tmplAstTemplates,
+
+			properties,
 			transformTmplAstNodes,
 		);
 	}
@@ -75,6 +88,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = (
 		return transformTmplAstSwitchBlock(
 			astNode,
 			tmplAstTemplates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}
@@ -83,6 +97,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = (
 		return transformTmplAstForLoopBlock(
 			astNode,
 			tmplAstTemplates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}
@@ -91,6 +106,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = (
 		return transformTmplAstDeferredBlock(
 			astNode,
 			tmplAstTemplates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}
@@ -99,6 +115,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = (
 		return transformTmplAstTemplate(
 			astNode,
 			tmplAstTemplates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}
@@ -107,6 +124,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = (
 		return transformTmplAstElement(
 			astNode,
 			tmplAstTemplates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}

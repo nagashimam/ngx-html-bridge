@@ -12,7 +12,7 @@ import { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 	TmplAstIfBlock
-> = (ifBlock, tmplAstTemplates, transformTmplAstNodes) => {
+> = (ifBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	if (ifBlock.branches.length === 1) {
@@ -20,7 +20,9 @@ export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 		result.push([]);
 	}
 	for (const branch of ifBlock.branches) {
-		result.push(...transformTmplAstNodes(branch.children, tmplAstTemplates));
+		result.push(
+			...transformTmplAstNodes(branch.children, tmplAstTemplates, properties),
+		);
 	}
 
 	return result;

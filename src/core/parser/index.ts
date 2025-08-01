@@ -6,12 +6,6 @@ import {
 } from "@angular/compiler";
 import * as fs from "node:fs";
 
-/**
- * Parses an Angular template file and extracts its AST and all TmplAstTemplate nodes.
- *
- * @param templatePath The path to the Angular template file.
- * @returns An object containing the parsed template (AST) and a list of all TmplAstTemplate nodes.
- */
 export const parseTemplateFile = (templatePath: string) => {
 	const template = fs.readFileSync(templatePath, "utf-8");
 	const parsedTemplate = parseTemplate(template, templatePath);

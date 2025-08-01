@@ -16,7 +16,7 @@ import { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 	TmplAstTemplate
-> = (ngIfTemplate, tmplAstTemplates, transformTmplAstNodes) => {
+> = (ngIfTemplate, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	const results: Node[][] = [];
 
 	const thenClause = findThenClause(ngIfTemplate, tmplAstTemplates);
@@ -24,17 +24,29 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 
 	if (thenClause) {
 		results.push(
-			...transformTmplAstNodes(thenClause.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				thenClause.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	} else {
 		results.push(
-			...transformTmplAstNodes(ngIfTemplate.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				ngIfTemplate.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	}
 
 	if (elseClause) {
 		results.push(
-			...transformTmplAstNodes(elseClause.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				elseClause.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	} else {
 		results.push([]);

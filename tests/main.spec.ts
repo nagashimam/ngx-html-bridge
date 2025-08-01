@@ -126,6 +126,8 @@ test("parseAngularTemplate returns expected HTML for attributes", () => {
 	const result = parseAngularTemplate(templatePath);
 	assert.deepStrictEqual(
 		result.sort(),
-		['<p lang="ja">attr works!</p>'].sort(),
+		[
+			'<p lang="ja" hidden="until-found" translate="no"> attr works!\n</p>',
+		].sort(),
 	);
 });

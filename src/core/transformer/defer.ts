@@ -12,13 +12,17 @@ import { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 	TmplAstDeferredBlock
-> = (deferBlock, tmplAstTemplates, transformTmplAstNodes) => {
+> = (deferBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	// Deferred content
 	if (deferBlock.children) {
 		result.push(
-			...transformTmplAstNodes(deferBlock.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				deferBlock.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	}
 
@@ -28,6 +32,7 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 			...transformTmplAstNodes(
 				deferBlock.placeholder.children,
 				tmplAstTemplates,
+				properties,
 			),
 		);
 	}
@@ -35,7 +40,11 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 	// Loading content
 	if (deferBlock.loading) {
 		result.push(
-			...transformTmplAstNodes(deferBlock.loading.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				deferBlock.loading.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	}
 

@@ -1,6 +1,7 @@
 import { parseTemplateFile } from "./core/parser";
 import { transformParsedTemplate } from "./core/transformer";
 import { generateHTMLs } from "./core/generator";
+import { getPropertiesFromComponent } from "./core/properties";
 
 /**
  * Parses an Angular template file and returns an array of possible static HTML string variations.
@@ -10,6 +11,11 @@ import { generateHTMLs } from "./core/generator";
  */
 export const parseAngularTemplate = (templatePath: string): string[] => {
 	const { parsedTemplate, tmplAstTemplates } = parseTemplateFile(templatePath);
-	const nodes = transformParsedTemplate(parsedTemplate, tmplAstTemplates);
+	const properties = getPropertiesFromComponent(templatePath);
+	const nodes = transformParsedTemplate(
+		parsedTemplate,
+		tmplAstTemplates,
+		properties,
+	);
 	return generateHTMLs(nodes);
 };

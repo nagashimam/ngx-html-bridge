@@ -12,12 +12,16 @@ import { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstSwitchBlock: TmplAstBranchNodeTransformer<
 	TmplAstSwitchBlock
-> = (switchBlock, tmplAstTemplates, transformTmplAstNodes) => {
+> = (switchBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	for (const switchCase of switchBlock.cases) {
 		result.push(
-			...transformTmplAstNodes(switchCase.children, tmplAstTemplates),
+			...transformTmplAstNodes(
+				switchCase.children,
+				tmplAstTemplates,
+				properties,
+			),
 		);
 	}
 

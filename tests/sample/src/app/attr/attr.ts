@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, input } from "@angular/core";
 
 @Component({
 	selector: "app-attr",
@@ -7,7 +7,7 @@ import { Component } from "@angular/core";
 	styleUrl: "./attr.scss",
 })
 export class Attr {
-	protected hiddenStatus = "until-found";
+	hiddenStatus = "until-found";
 	protected lang = "ja";
-	protected translate = "no";
+	protected translate = input("no");
 }

@@ -13,11 +13,12 @@ import { transformTmplAstTemplateNgIf } from "./ng-if";
  */
 export const transformTmplAstTemplate: TmplAstBranchNodeTransformer<
 	TmplAstTemplate
-> = (template, templates, transformTmplAstNodes) => {
+> = (template, templates, properties, transformTmplAstNodes) => {
 	if (isNgIf(template)) {
 		return transformTmplAstTemplateNgIf(
 			template,
 			templates,
+			properties,
 			transformTmplAstNodes,
 		);
 	}
