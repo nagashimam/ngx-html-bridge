@@ -1,3 +1,9 @@
+/**
+ * @fileoverview
+ * This file contains the logic for extracting property information from an Angular
+ * component's TypeScript file. This is used to resolve attribute and property
+ * bindings in the corresponding template.
+ */
 import { existsSync, readFileSync } from "node:fs";
 import type { TSESTree } from "@typescript-eslint/typescript-estree";
 import { parse } from "@typescript-eslint/typescript-estree";
@@ -12,6 +18,13 @@ import {
 	isTSEStreePropertyDefinition,
 } from "./utils";
 
+/**
+ * Extracts public and protected properties from an Angular component's TypeScript
+ * file that are accessible from its template.
+ *
+ * @param templateUrl The path to the component's HTML template file.
+ * @returns A map of property names to their initial values.
+ */
 export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	const properties = new Map<string, string>();
 	const componentFile = templateUrl.replace(".html", ".ts");
@@ -52,6 +65,12 @@ export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	return properties;
 };
 
+/**
+ * Finds the TypeScript `ClassDeclaration` for the component.
+ *
+ * @param ast The program's abstract syntax tree.
+ * @returns The `ClassDeclaration` node for the component, or `undefined` if not found.
+ */
 const getComponentDeclaration = (
 	ast: TSESTree.Program,
 ): TSESTree.ClassDeclaration | undefined => {
@@ -76,6 +95,12 @@ const getComponentDeclaration = (
 	);
 };
 
+/**
+ * Filters and returns the properties that are accessible from the template.
+ *
+ * @param classDeclaration The component's `ClassDeclaration` node.
+ * @returns An array of `PropertyDefinition` nodes.
+ */
 const getPropertiesAccessibleFromTemplate = (
 	classDeclaration: TSESTree.ClassDeclaration,
 ) => {
@@ -100,6 +125,12 @@ const getPropertiesAccessibleFromTemplate = (
 		.map((definition) => castNode<TSESTree.PropertyDefinition>(definition));
 };
 
+/**
+ * Extracts the literal value from a property's value expression.
+ *
+ * @param value The expression node for the property's value.
+ * @returns The `Literal` node containing the value.
+ */
 const getLiteralFromValue = (value: TSESTree.Expression) => {
 	if (isTSESTreeCallExpression(value)) {
 		const argument = castNode<TSESTree.CallExpression>(value).arguments[0];

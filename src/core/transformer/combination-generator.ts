@@ -1,11 +1,11 @@
 /**
- * Generates all combinations from a 3D array of nodes.
+ * Combine all combinations from a 3D array of nodes.
  * Example: Takes [[[div#1]],[[div#2]],[[div#3],[div#4,div#5]]] and outputs [[div#1,div#2,div#3],[div#1,div#2,div#4,div#5]]
  *
  * @param arrays A 3D array of nodes.
  * @returns A 2D array representing all possible combinations of nodes.
  */
-export const generate3DCombinations = (arrays: Node[][][]): Node[][] => {
+export const generateCombinations = (arrays: Node[][][]): Node[][] => {
 	const result: Node[][] = [];
 
 	function backtrack(index: number, current: Node[]) {

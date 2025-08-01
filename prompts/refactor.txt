@@ -1,0 +1,3 @@
+I want you to refactor `src/**/*.ts` so we can make sure our code base follows our coding guidlines specified in docs. 
+
+Read `src/**/*.ts` and `**/*.md` again. Are there any contradictions between code base and docs? All relavant aspects in code are explained in docs? Do docs need updates to reflect changes in code base?

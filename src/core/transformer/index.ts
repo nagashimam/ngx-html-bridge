@@ -17,7 +17,7 @@ import {
 	Properties,
 } from "../../types";
 import { transformTmplAstElement } from "./element";
-import { generate3DCombinations } from "./cartesian-product";
+import { generateCombinations } from "./combination-generator";
 import { transformTmplAstIfBlock } from "./if";
 import { transformTmplAstSwitchBlock } from "./switch";
 import { transformTmplAstForLoopBlock } from "./for";
@@ -59,7 +59,7 @@ const transformTmplAstNodes: TmplAstNodesTransformer = (
 	const parsed = astNodes.map((astNode) =>
 		transformTmplAstNode(astNode, tmplAstTemplates, properties),
 	);
-	return generate3DCombinations(parsed);
+	return generateCombinations(parsed);
 };
 
 /**

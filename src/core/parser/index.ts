@@ -1,3 +1,9 @@
+/**
+ * @fileoverview
+ * This file contains the core logic for parsing Angular templates.
+ * It uses the Angular compiler to create an AST and then collects
+ * all `TmplAstTemplate` nodes for further processing.
+ */
 import {
 	parseTemplate,
 	TmplAstRecursiveVisitor,
@@ -6,6 +12,12 @@ import {
 } from "@angular/compiler";
 import * as fs from "node:fs";
 
+/**
+ * Parses an Angular template file and extracts the parsed template and all `TmplAstTemplate` nodes.
+ *
+ * @param templatePath The absolute path to the Angular template file.
+ * @returns An object containing the parsed template and an array of `TmplAstTemplate` nodes.
+ */
 export const parseTemplateFile = (templatePath: string) => {
 	const template = fs.readFileSync(templatePath, "utf-8");
 	const parsedTemplate = parseTemplate(template, templatePath);
@@ -18,15 +30,16 @@ export const parseTemplateFile = (templatePath: string) => {
 };
 
 /**
- * Collects all TmplAstTemplate nodes from an Angular AST.
+ * A visitor that collects all `TmplAstTemplate` nodes from an Angular AST.
+ * This is used to gather all `<ng-template>` elements, which are crucial
+ * for resolving structural directives like `*ngIf`.
  */
 class TmplAstTemplateCollector extends TmplAstRecursiveVisitor {
 	public templates: TmplAstTemplate[] = [];
 
 	/**
-	 * Overrides the default visitTemplate method to collect TmplAstTemplate nodes.
-	 * @param template The TmplAstTemplate node to visit.
-	 * @returns The visited TmplAstTemplate node.
+	 * Visits a `TmplAstTemplate` node and adds it to the collection.
+	 * @param template The `TmplAstTemplate` node to visit.
 	 */
 	override visitTemplate(template: TmplAstTemplate) {
 		super.visitTemplate(template);

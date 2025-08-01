@@ -9,6 +9,7 @@ This document provides context for the Gemini AI assistant to effectively contri
 - **Core Purpose:** To convert Angular templates into an array of standard, static HTML strings. This enables developers to run any HTML validator of their choice against the generated output, including tools that do not natively support Angular's syntax.
 - **Key Features:**
     - Parses Angular template syntax (built-in control flow, structural directives like *ngIf/*ngFor, property binding, etc.).
+    - Parses the component's TypeScript file to resolve property bindings.
     - Generates a comprehensive array of HTML variations based on the template's logic.
     - Outputs pure, static HTML strings that are free of any Angular-specific syntax.
 
@@ -28,6 +29,7 @@ The project is a standalone parser tool built with TypeScript.
 ├── src/                    # Source code for the parser
 │   ├── core/               # Core parsing and transformation logic
 │   │   ├── parser/index.ts
+│   │   ├── properties/index.ts
 │   │   ├── transformer/index.ts
 │   │   ├── generator/index.ts
 │   │   └── ...
