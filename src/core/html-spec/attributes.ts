@@ -1,3 +1,10 @@
+/**
+ * @fileoverview
+ * This file contains a set of valid HTML attributes.
+ * This is used to filter out attributes that are not valid HTML attributes.
+ *
+ * The data is extracted from https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
+ */
 export const VALID_HTML_ATTRIBUTES = new Set([
 	"accesskey",
 	"autocapitalize",
