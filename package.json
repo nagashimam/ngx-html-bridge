@@ -9,7 +9,8 @@
 		"test": "node --import tsx --test tests/main.spec.ts",
 		"lint": "biome check src --write",
 		"example": "node --import tsx examples/basic-usage.ts",
-		"update-attr": "node --import tsx scripts/extract-attributes.ts"
+		"update-attr": "node --import tsx scripts/extract-attributes.ts",
+		"publish": "npm publish"
 	},
 	"keywords": [
 		"Angular",
