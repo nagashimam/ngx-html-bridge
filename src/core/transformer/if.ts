@@ -1,5 +1,5 @@
-import { TmplAstIfBlock } from "@angular/compiler";
-import { TmplAstBranchNodeTransformer } from "../../types";
+import type { TmplAstIfBlock } from "@angular/compiler";
+import type { TmplAstBranchNodeTransformer } from "../../types";
 
 /**
  * Transforms a TmplAstIfBlock node into a 2D array of DOM Nodes.

@@ -1,9 +1,9 @@
-import {
+import type {
 	ASTWithSource,
 	TmplAstBoundAttribute,
 	TmplAstTemplate,
 } from "@angular/compiler";
-import { TmplAstBranchNodeTransformer } from "../../types";
+import type { TmplAstBranchNodeTransformer } from "../../types";
 
 /**
  * Transforms a TmplAstTemplate node representing an *ngIf directive into a 2D array of DOM Nodes.

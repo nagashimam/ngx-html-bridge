@@ -131,3 +131,17 @@ test("parseAngularTemplate returns expected HTML for attributes", () => {
 		].sort(),
 	);
 });
+
+test("parseAngularTemplate returns expected HTML for ternary operator in property binding", () => {
+	const templatePath =
+		"tests/sample/src/app/ternary-operator/ternary-operator.html";
+	const result = parseAngularTemplate(templatePath);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			'<div hidden="until-found">Ternary Operator Test</div>',
+			'<div hidden="">Ternary Operator Test</div>',
+			"<div>Ternary Operator Test</div>",
+		].sort(),
+	);
+});

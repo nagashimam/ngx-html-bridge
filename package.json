@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "tsc",
 		"test": "node --import tsx --test tests/main.spec.ts",
-		"lint": "biome check --apply-unsafe .",
+		"lint": "biome check src --write",
 		"example": "node --import tsx examples/basic-usage.ts",
 		"update-attr": "node --import tsx scripts/extract-attributes.ts"
 	},

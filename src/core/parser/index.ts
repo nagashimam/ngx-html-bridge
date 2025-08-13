@@ -4,11 +4,12 @@
  * It uses the Angular compiler to create an AST and then collects
  * all `TmplAstTemplate` nodes for further processing.
  */
+
 import {
 	parseTemplate,
 	TmplAstRecursiveVisitor,
-	TmplAstTemplate,
 	tmplAstVisitAll,
+	type TmplAstTemplate,
 } from "@angular/compiler";
 import * as fs from "node:fs";
 

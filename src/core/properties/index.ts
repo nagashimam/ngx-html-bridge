@@ -5,8 +5,7 @@
  * bindings in the corresponding template.
  */
 import { existsSync, readFileSync } from "node:fs";
-import type { TSESTree } from "@typescript-eslint/typescript-estree";
-import { parse } from "@typescript-eslint/typescript-estree";
+import { parse, type TSESTree } from "@typescript-eslint/typescript-estree";
 import type { Properties } from "../../types";
 import {
 	castNode,

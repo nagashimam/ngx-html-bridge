@@ -42,7 +42,7 @@ export type TmplAstNodeDispatcher = (
 /**
  * Represents an HTML attribute with a name and a value.
  */
-export type Attr = { name: string; value: string };
+export type Attr = { name: string; value: string | undefined | null };
 
 /**
  * The name of a component property.

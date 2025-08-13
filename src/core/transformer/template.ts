@@ -1,5 +1,5 @@
-import { TmplAstTemplate } from "@angular/compiler";
-import { TmplAstBranchNodeTransformer } from "../../types";
+import type { TmplAstTemplate } from "@angular/compiler";
+import type { TmplAstBranchNodeTransformer } from "../../types";
 import { transformTmplAstTemplateNgIf } from "./ng-if";
 
 /**

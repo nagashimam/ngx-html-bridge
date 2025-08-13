@@ -1,5 +1,5 @@
-import { TmplAstBoundText } from "@angular/compiler";
-import { TmplAstLeafNodeTransformer } from "../../types";
+import type { TmplAstBoundText } from "@angular/compiler";
+import type { TmplAstLeafNodeTransformer } from "../../types";
 import { document } from "../dom";
 
 /**
@@ -10,6 +10,6 @@ import { document } from "../dom";
  */
 export const transformTmplAstBoundText: TmplAstLeafNodeTransformer<
 	TmplAstBoundText
-> = (boundText) => {
+> = () => {
 	return [[document.createTextNode("some random text")]];
 };

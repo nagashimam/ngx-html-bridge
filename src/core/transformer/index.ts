@@ -1,5 +1,5 @@
 import {
-	ParsedTemplate,
+	type ParsedTemplate,
 	TmplAstBoundText,
 	TmplAstDeferredBlock,
 	TmplAstElement,
@@ -9,21 +9,20 @@ import {
 	TmplAstTemplate,
 	TmplAstText,
 } from "@angular/compiler";
-
-import { transformTmplAstText } from "./text";
-import {
-	TmplAstNodesTransformer,
-	TmplAstNodeDispatcher,
+import type {
 	Properties,
+	TmplAstNodeDispatcher,
+	TmplAstNodesTransformer,
 } from "../../types";
-import { transformTmplAstElement } from "./element";
+import { transformTmplAstBoundText } from "./bound-text";
 import { generateCombinations } from "./combination-generator";
+import { transformTmplAstDeferredBlock } from "./defer";
+import { transformTmplAstElement } from "./element";
+import { transformTmplAstForLoopBlock } from "./for";
 import { transformTmplAstIfBlock } from "./if";
 import { transformTmplAstSwitchBlock } from "./switch";
-import { transformTmplAstForLoopBlock } from "./for";
-import { transformTmplAstBoundText } from "./bound-text";
-import { transformTmplAstDeferredBlock } from "./defer";
 import { transformTmplAstTemplate } from "./template";
+import { transformTmplAstText } from "./text";
 
 /**
  * Transforms a ParsedTemplate object into a 2D array of DOM Nodes.

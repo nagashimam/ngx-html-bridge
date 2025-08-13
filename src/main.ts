@@ -1,7 +1,7 @@
-import { parseTemplateFile } from "./core/parser";
-import { transformParsedTemplate } from "./core/transformer";
-import { generateHTMLs } from "./core/generator";
-import { getPropertiesFromComponent } from "./core/properties";
+import { generateHTMLs } from "./core/generator/index";
+import { parseTemplateFile } from "./core/parser/index";
+import { getPropertiesFromComponent } from "./core/properties/index";
+import { transformParsedTemplate } from "./core/transformer/index";
 
 /**
  * Parses an Angular template file and returns an array of possible static HTML string variations.

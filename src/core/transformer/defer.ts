@@ -1,5 +1,5 @@
-import { TmplAstDeferredBlock } from "@angular/compiler";
-import { TmplAstBranchNodeTransformer } from "../../types";
+import type { TmplAstDeferredBlock } from "@angular/compiler";
+import type { TmplAstBranchNodeTransformer } from "../../types";
 
 /**
  * Transforms a TmplAstDeferredBlock node into a 2D array of DOM Nodes.

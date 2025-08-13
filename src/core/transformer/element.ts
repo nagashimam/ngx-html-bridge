@@ -1,15 +1,25 @@
-import {
-	AST,
+import type {
 	ASTWithSource,
-	LiteralPrimitive,
-	PropertyRead,
 	TmplAstBoundAttribute,
 	TmplAstElement,
 	TmplAstTextAttribute,
 } from "@angular/compiler";
-import { Attr, Properties, TmplAstBranchNodeTransformer } from "../../types";
+import { parse, type TSESTree } from "@typescript-eslint/typescript-estree";
+import type {
+	Attr,
+	Properties,
+	TmplAstBranchNodeTransformer,
+} from "../../types";
 import { document } from "../dom";
 import { VALID_HTML_ATTRIBUTES } from "../html-spec/attributes";
+import {
+	castAST,
+	castNode,
+	isTSESTreeConditionalExpression,
+	isTSESTreeIdentifier,
+	isTSESTreeLiteral,
+} from "../properties/utils";
+import { generateAttrCombinations } from "./combination-generator";
 
 /**
  * Transforms a TmplAstElement node into a 2D array of DOM Nodes.
@@ -46,13 +56,19 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 			for (const children of children2DArray) {
 				const elementNode = document.createElement(element.name);
 				for (const child of children) {
-					elementNode.appendChild(child);
+					elementNode.appendChild(child.cloneNode(true));
 				}
 				for (const attribute of attributes) {
-					elementNode.setAttribute(attribute.name, attribute.value);
+					const value = attribute.value;
+					if (!(value === null || value === undefined)) {
+						elementNode.setAttribute(attribute.name, value);
+					}
 				}
 				for (const prop of props) {
-					elementNode.setAttribute(prop.name, prop.value);
+					const value = prop.value;
+					if (!(value === null || value === undefined)) {
+						elementNode.setAttribute(prop.name, value);
+					}
 				}
 				parsedElementNodes.push([elementNode]);
 			}
@@ -62,6 +78,13 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	return parsedElementNodes;
 };
 
+/**
+ * Extracts standard HTML attributes from a list of TmplAstTextAttribute nodes.
+ * It filters out attributes that are not considered valid HTML attributes.
+ *
+ * @param tmplAstTextAttributes An array of TmplAstTextAttribute nodes.
+ * @returns A 2D array containing a single array of Attr objects, representing the valid HTML attributes.
+ */
 const pairwiseAttributeNameAndValue = (
 	tmplAstTextAttributes: TmplAstTextAttribute[],
 ): Attr[][] => {
@@ -75,35 +98,71 @@ const pairwiseAttributeNameAndValue = (
 	return [[...attributes]];
 };
 
+/**
+ * Extracts property names and their resolved values from TmplAstBoundAttribute nodes.
+ * It filters for valid HTML attributes and resolves their values using the component's properties.
+ *
+ * @param tmplAstBoundAttributes An array of TmplAstBoundAttribute nodes.
+ * @param properties A map of component properties and their resolved values.
+ * @returns A 2D array of Attr objects, representing all possible combinations of resolved attribute values.
+ */
 const pairwisePropertyNameAndValue = (
 	tmplAstBoundAttributes: TmplAstBoundAttribute[],
 	properties: Properties,
 ): Attr[][] => {
-	const attributes = tmplAstBoundAttributes.map((attr) => {
-		const name = attr.name;
-		const value = extractValueFromSource(attr.value, properties);
-		return {
-			name,
-			value,
-		};
-	});
-	const filteredAttributes = attributes.filter((attributeOrInput) =>
-		VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
-	);
-	return [[...filteredAttributes]];
+	const listOfPossibleAttributeValues: Attr[][] = tmplAstBoundAttributes
+		.filter((attributeOrInput) =>
+			VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
+		)
+		.map((attr) => {
+			const source = castAST<ASTWithSource>(attr.value).source || "";
+			const body = parse(source).body[0];
+			const expression =
+				castNode<TSESTree.ExpressionStatement>(body).expression;
+			const values = parseExpressionIntoLiterals(expression, properties);
+			return values.map((value) => ({ name: attr.name, value }));
+		});
+	return generateAttrCombinations(listOfPossibleAttributeValues);
 };
 
-const extractValueFromSource = (ast: AST, properties: Properties) => {
-	if (!(ast instanceof ASTWithSource)) {
-		return "some random value";
+/**
+ * Parses a TypeScript AST expression into a list of possible literal values.
+ * Handles conditional (ternary) expressions, literal values, and identifiers.
+ * Unresolved identifiers or unsupported expressions will result in a placeholder value.
+ *
+ * @param expression The TypeScript AST expression to parse.
+ * @param properties A map of component properties and their resolved values.
+ * @returns An array of possible string, undefined, or null literal values.
+ */
+const parseExpressionIntoLiterals = (
+	expression: TSESTree.Expression,
+	properties: Properties,
+): (string | undefined | null)[] => {
+	if (isTSESTreeConditionalExpression(expression)) {
+		const { consequent, alternate } =
+			castNode<TSESTree.ConditionalExpression>(expression);
+		return [
+			...parseExpressionIntoLiterals(consequent, properties),
+			...parseExpressionIntoLiterals(alternate, properties),
+		];
 	}
 
-	if (ast.ast instanceof PropertyRead) {
-		return properties.get(ast.ast.name) || "some random value";
-	}
-	if (ast.ast instanceof LiteralPrimitive) {
-		return ast.ast.value.toString();
+	if (isTSESTreeLiteral(expression)) {
+		const literal = castNode<TSESTree.Literal>(expression);
+		if (literal.raw === "null") {
+			return [null];
+		}
+		const literalValue = literal.value?.toString();
+		return [literalValue || ""];
 	}
 
-	return "some random value";
+	if (isTSESTreeIdentifier(expression)) {
+		const name = castNode<TSESTree.Identifier>(expression).name || "";
+		if (name === "undefined") {
+			return [undefined];
+		}
+		return [properties.get(name) || "some random value"];
+	}
+
+	return ["some random value"];
 };
