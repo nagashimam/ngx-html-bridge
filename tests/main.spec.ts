@@ -6,13 +6,17 @@ test("parseAngularTemplate returns expected HTML for a plain template", () => {
 	const templatePath = "tests/sample/src/app/plain/plain.html";
 	const result = parseAngularTemplate(templatePath);
 	assert.deepStrictEqual(result, [
-		"<p><span>plain works!</span></p><p>plain works!</p>",
+		{
+			plain: '<p><span>plain works!</span></p><p>plain works!</p>',
+			anotated:
+				'<p data-ngx-html-bridge-line="0" data-ngx-html-bridge-col="0" data-ngx-html-bridge-start-offset="0" data-ngx-html-bridge-end-offset="32"><span data-ngx-html-bridge-line="0" data-ngx-html-bridge-col="3" data-ngx-html-bridge-start-offset="3" data-ngx-html-bridge-end-offset="28">plain works!</span></p><p data-ngx-html-bridge-line="1" data-ngx-html-bridge-col="0" data-ngx-html-bridge-start-offset="33" data-ngx-html-bridge-end-offset="52">plain works!</p>',
+		},
 	]);
 });
 
 test("parseAngularTemplate returns expected HTML for @if, @else if, and @else blocks", () => {
 	const templatePath = "tests/sample/src/app/if/if.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -26,7 +30,7 @@ test("parseAngularTemplate returns expected HTML for @if, @else if, and @else bl
 test("parseAngularTemplate returns expected HTML for @if without else", () => {
 	const templatePath =
 		"tests/sample/src/app/if-without-else/if-without-else.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Condition is true!</p>", ""].sort(),
@@ -35,7 +39,7 @@ test("parseAngularTemplate returns expected HTML for @if without else", () => {
 
 test("parseAngularTemplate returns expected HTML for @switch, @case, and @default blocks", () => {
 	const templatePath = "tests/sample/src/app/switch/switch.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Case 1</p>", "<p>Case 2</p>", "<p>Default case</p>"].sort(),
@@ -44,7 +48,7 @@ test("parseAngularTemplate returns expected HTML for @switch, @case, and @defaul
 
 test("parseAngularTemplate returns expected HTML for @for block", () => {
 	const templatePath = "tests/sample/src/app/for/for.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -58,7 +62,7 @@ test("parseAngularTemplate returns expected HTML for @for block", () => {
 test("parseAngularTemplate returns expected HTML for @for block with @empty", () => {
 	const templatePath =
 		"tests/sample/src/app/for-with-empty/for-with-empty.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -71,7 +75,7 @@ test("parseAngularTemplate returns expected HTML for @for block with @empty", ()
 
 test("parseAngularTemplate returns expected HTML for @defer block", () => {
 	const templatePath = "tests/sample/src/app/defer/defer.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -84,7 +88,7 @@ test("parseAngularTemplate returns expected HTML for @defer block", () => {
 
 test("parseAngularTemplate returns expected HTML for *ngIf", () => {
 	const templatePath = "tests/sample/src/app/ngif/ngif.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -97,7 +101,7 @@ test("parseAngularTemplate returns expected HTML for *ngIf", () => {
 test("parseAngularTemplate returns expected HTML for *ngIf without else", () => {
 	const templatePath =
 		"tests/sample/src/app/ngif-without-else/ngif-without-else.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<div><p>Condition is true!</p></div>", ""].sort(),
@@ -107,7 +111,7 @@ test("parseAngularTemplate returns expected HTML for *ngIf without else", () => 
 test("parseAngularTemplate returns expected HTML for *ngIf with then", () => {
 	const templatePath =
 		"tests/sample/src/app/ngif-with-then/ngif-with-then.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Condition is true (then block)!</p>", ""].sort(),
@@ -117,13 +121,13 @@ test("parseAngularTemplate returns expected HTML for *ngIf with then", () => {
 test("parseAngularTemplate returns expected HTML for @switch with single case and no default", () => {
 	const templatePath =
 		"tests/sample/src/app/switch-without-default/switch-without-default.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(result.sort(), ["<p>Case 1</p>", ""].sort());
 });
 
 test("parseAngularTemplate returns expected HTML for attributes", () => {
 	const templatePath = "tests/sample/src/app/attr/attr.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -135,13 +139,13 @@ test("parseAngularTemplate returns expected HTML for attributes", () => {
 test("parseAngularTemplate returns expected HTML for ternary operator in property binding", () => {
 	const templatePath =
 		"tests/sample/src/app/ternary-operator/ternary-operator.html";
-	const result = parseAngularTemplate(templatePath);
+	const result = parseAngularTemplate(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
 			'<div hidden="until-found">Ternary Operator Test</div>',
 			'<div hidden="">Ternary Operator Test</div>',
-			"<div>Ternary Operator Test</div>",
+			'<div>Ternary Operator Test</div>',
 		].sort(),
 	);
 });

@@ -5,13 +5,13 @@
  * all `TmplAstTemplate` nodes for further processing.
  */
 
+import * as fs from "node:fs";
 import {
 	parseTemplate,
 	TmplAstRecursiveVisitor,
-	tmplAstVisitAll,
 	type TmplAstTemplate,
+	tmplAstVisitAll,
 } from "@angular/compiler";
-import * as fs from "node:fs";
 
 /**
  * Parses an Angular template file and extracts the parsed template and all `TmplAstTemplate` nodes.

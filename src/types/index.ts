@@ -56,3 +56,17 @@ type PropertyInitialValue = string;
  * A map of component property names to their initial values.
  */
 export type Properties = Map<PropertyName, PropertyInitialValue>;
+
+/**
+ * Represents a single variation of the parsed HTML output.
+ */
+export type HtmlVariation = {
+	/**
+	 * The plain, static HTML string.
+	 */
+	plain: string;
+	/**
+	 * The HTML string with additional metadata attributes for mapping back to the original template.
+	 */
+	anotated: string;
+};

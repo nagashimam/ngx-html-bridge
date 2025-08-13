@@ -1,3 +1,4 @@
+import type { HtmlVariation } from "../../types";
 import { document } from "../dom";
 
 /**
@@ -6,7 +7,7 @@ import { document } from "../dom";
  * @param node2DArray A 2D array where each inner array represents a sequence of DOM Nodes for a single HTML output.
  * @returns An array of HTML strings.
  */
-export const generateHTMLs = (node2DArray: Node[][]): string[] => {
+export const generateHTMLs = (node2DArray: Node[][]): HtmlVariation[] => {
 	return node2DArray.map((nodeArray) => generateHTML(nodeArray));
 };
 
@@ -16,10 +17,29 @@ export const generateHTMLs = (node2DArray: Node[][]): string[] => {
  * @param nodes An array of DOM Nodes.
  * @returns The HTML string representation of the nodes.
  */
-const generateHTML = (nodes: Node[]): string => {
-	const container = document.createElement("div");
+const generateHTML = (nodes: Node[]): HtmlVariation => {
+	const anotatedContainer = document.createElement("div");
 	for (const node of nodes) {
-		container.appendChild(node);
+		anotatedContainer.appendChild(node);
 	}
-	return container.innerHTML;
+	const anotated = anotatedContainer.innerHTML;
+
+	const plainContainer = document.createElement("div");
+	for (const node of nodes) {
+		plainContainer.appendChild(node.cloneNode(true));
+	}
+	for (const el of plainContainer.querySelectorAll(
+		"[data-ngx-html-bridge-line]",
+	)) {
+		el.removeAttribute("data-ngx-html-bridge-line");
+		el.removeAttribute("data-ngx-html-bridge-col");
+		el.removeAttribute("data-ngx-html-bridge-start-offset");
+		el.removeAttribute("data-ngx-html-bridge-end-offset");
+	}
+	const plain = plainContainer.innerHTML;
+
+	return {
+		anotated,
+		plain,
+	};
 };

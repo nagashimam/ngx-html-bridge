@@ -55,6 +55,22 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 		for (const attributes of attribute2DArray) {
 			for (const children of children2DArray) {
 				const elementNode = document.createElement(element.name);
+				elementNode.setAttribute(
+					"data-ngx-html-bridge-line",
+					element.sourceSpan.start.line.toString(),
+				);
+				elementNode.setAttribute(
+					"data-ngx-html-bridge-col",
+					element.sourceSpan.start.col.toString(),
+				);
+				elementNode.setAttribute(
+					"data-ngx-html-bridge-start-offset",
+					element.sourceSpan.start.offset.toString(),
+				);
+				elementNode.setAttribute(
+					"data-ngx-html-bridge-end-offset",
+					element.sourceSpan.end.offset.toString(),
+				);
 				for (const child of children) {
 					elementNode.appendChild(child.cloneNode(true));
 				}
