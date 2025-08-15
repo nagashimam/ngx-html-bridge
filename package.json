@@ -1,6 +1,6 @@
 {
 	"name": "ngx-html-bridge",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
@@ -23,13 +23,13 @@
 	"license": "MIT",
 	"dependencies": {
 		"@angular/compiler": "^20.1.0",
-		"jsdom": "^26.1.0"
+		"jsdom": "^26.1.0",
+		"@typescript-eslint/typescript-estree": "^8.38.0"
 	},
 	"devDependencies": {
 		"@markuplint/html-spec": "^4.14.2",
 		"@types/jsdom": "^21.1.7",
 		"@types/node": "^24.1.0",
-		"@typescript-eslint/typescript-estree": "^8.38.0",
 		"tsx": "^4.11.0",
 		"typescript": "^5.8.3"
 	}
