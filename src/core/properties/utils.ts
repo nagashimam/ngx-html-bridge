@@ -27,7 +27,7 @@ export const castAST = <T extends AST>(ast: AST): T => ast as T;
  * @returns True if the node is a `CallExpression`.
  */
 export const isTSESTreeCallExpression = (node: TSESTree.Node) =>
-	(node.type as string) === TSESTree.AST_NODE_TYPES.CallExpression;
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.CallExpression;
 
 /**
  * Checks if a node is an `Identifier`.
@@ -35,7 +35,7 @@ export const isTSESTreeCallExpression = (node: TSESTree.Node) =>
  * @returns True if the node is an `Identifier`.
  */
 export const isTSESTreeIdentifier = (node: TSESTree.Node) =>
-	(node.type as string) === TSESTree.AST_NODE_TYPES.Identifier;
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.Identifier;
 
 /**
  * Checks if a node is a `Literal`.
@@ -43,7 +43,7 @@ export const isTSESTreeIdentifier = (node: TSESTree.Node) =>
  * @returns True if the node is a `Literal`.
  */
 export const isTSESTreeLiteral = (node: TSESTree.Node) =>
-	(node.type as string) === TSESTree.AST_NODE_TYPES.Literal;
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.Literal;
 
 /**
  * Checks if a node is a `ConditionalExpression`.
@@ -51,7 +51,7 @@ export const isTSESTreeLiteral = (node: TSESTree.Node) =>
  * @returns True if the node is a `ConditionalExpression`.
  */
 export const isTSESTreeConditionalExpression = (node: TSESTree.Node) =>
-	(node.type as string) === TSESTree.AST_NODE_TYPES.ConditionalExpression;
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.ConditionalExpression;
 
 /**
  * Checks if a statement is an `ExportNamedDeclaration`.
@@ -60,7 +60,7 @@ export const isTSESTreeConditionalExpression = (node: TSESTree.Node) =>
  */
 export const isTSESExportNamedDeclaration = (
 	statement: TSESTree.ProgramStatement,
-) => statement.type === AST_NODE_TYPES.ExportNamedDeclaration;
+) => statement?.type === AST_NODE_TYPES.ExportNamedDeclaration;
 
 /**
  * Checks if a declaration is a `ClassDeclaration`.
@@ -78,7 +78,7 @@ export const isTSESClassDeclaration = (
  */
 export const isTSEStreePropertyDefinition = (
 	classElement: TSESTree.ClassElement,
-) => classElement.type === AST_NODE_TYPES.PropertyDefinition;
+) => classElement?.type === AST_NODE_TYPES.PropertyDefinition;
 
 /**
  * Checks if a class is an Angular component by looking for the `@Component` decorator.
