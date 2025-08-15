@@ -151,6 +151,13 @@ const pairwisePropertyNameAndValue = (
 		.filter((attributeOrInput) =>
 			VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
 		)
+		.filter((attribute) => {
+			const details = attribute.keySpan.details;
+			if (!details) {
+				return true;
+			}
+			return !(details.includes("class.") || details.includes("style."));
+		})
 		.map((attr) => {
 			const source = castAST<ASTWithSource>(attr.value).source || "";
 			const body = parse(source).body[0];

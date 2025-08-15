@@ -163,3 +163,9 @@ test("parseAngularTemplateFile returns expected HTML for ternary operator in pro
 		].sort(),
 	);
 });
+
+test("parseAngularTemplateFile ignores style and class binding", () => {
+	const templatePath = "tests/sample/src/app/style-binding/style-binding.html";
+	const result = parseAngularTemplateFile(templatePath).map((r) => r.plain);
+	assert.deepStrictEqual(result.sort(), ["<p>style-binding works!</p>"].sort());
+});
