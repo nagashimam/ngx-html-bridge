@@ -1,5 +1,6 @@
 import type { HtmlVariation } from "../../types";
 import { document } from "../dom";
+import { attributeNames } from "../transformer/element";
 
 /**
  * Generates an array of HTML strings from a 2D array of DOM Nodes.
@@ -18,11 +19,11 @@ export const generateHTMLs = (node2DArray: Node[][]): HtmlVariation[] => {
  * @returns The HTML string representation of the nodes.
  */
 const generateHTML = (nodes: Node[]): HtmlVariation => {
-	const anotatedContainer = document.createElement("div");
+	const annotatedContainer = document.createElement("div");
 	for (const node of nodes) {
-		anotatedContainer.appendChild(node);
+		annotatedContainer.appendChild(node);
 	}
-	const anotated = anotatedContainer.innerHTML;
+	const annotated = annotatedContainer.innerHTML;
 
 	const plainContainer = document.createElement("div");
 	for (const node of nodes) {
@@ -36,10 +37,18 @@ const generateHTML = (nodes: Node[]): HtmlVariation => {
 		el.removeAttribute("data-ngx-html-bridge-start-offset");
 		el.removeAttribute("data-ngx-html-bridge-end-offset");
 	}
+	for (const attribute of new Set(attributeNames)) {
+		for (const el of plainContainer.querySelectorAll(
+			`[data-ngx-html-bridge-${attribute}-start-offset]`,
+		)) {
+			el.removeAttribute(`data-ngx-html-bridge-${attribute}-start-offset`);
+			el.removeAttribute(`data-ngx-html-bridge-${attribute}-end-offset`);
+		}
+	}
 	const plain = plainContainer.innerHTML;
 
 	return {
-		anotated,
+		annotated,
 		plain,
 	};
 };

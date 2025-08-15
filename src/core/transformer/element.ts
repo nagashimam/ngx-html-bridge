@@ -21,6 +21,8 @@ import {
 } from "../properties/utils";
 import { generateAttrCombinations } from "./combination-generator";
 
+export const attributeNames: string[] = [];
+
 /**
  * Transforms a TmplAstElement node into a 2D array of DOM Nodes.
  * It handles `ng-container` elements by directly transforming their children.
@@ -77,12 +79,30 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 				for (const attribute of attributes) {
 					const value = attribute.value;
 					if (!(value === null || value === undefined)) {
+						attributeNames.push(attribute.name);
+						elementNode.setAttribute(
+							`data-ngx-html-bridge-${attribute.name}-start-offset`,
+							attribute.sourceSpan.start.offset.toString(),
+						);
+						elementNode.setAttribute(
+							`data-ngx-html-bridge-${attribute.name}-end-offset`,
+							attribute.sourceSpan.end.offset.toString(),
+						);
 						elementNode.setAttribute(attribute.name, value);
 					}
 				}
 				for (const prop of props) {
 					const value = prop.value;
 					if (!(value === null || value === undefined)) {
+						attributeNames.push(prop.name);
+						elementNode.setAttribute(
+							`data-ngx-html-bridge-${prop.name}-start-offset`,
+							prop.sourceSpan.start.offset.toString(),
+						);
+						elementNode.setAttribute(
+							`data-ngx-html-bridge-${prop.name}-end-offset`,
+							prop.sourceSpan.end.offset.toString(),
+						);
 						elementNode.setAttribute(prop.name, value);
 					}
 				}
@@ -107,6 +127,7 @@ const pairwiseAttributeNameAndValue = (
 	const attributesOrInputs = tmplAstTextAttributes.map((attr) => ({
 		name: attr.name,
 		value: attr.value,
+		sourceSpan: attr.sourceSpan,
 	}));
 	const attributes = attributesOrInputs.filter((attributeOrInput) =>
 		VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
@@ -136,7 +157,11 @@ const pairwisePropertyNameAndValue = (
 			const expression =
 				castNode<TSESTree.ExpressionStatement>(body).expression;
 			const values = parseExpressionIntoLiterals(expression, properties);
-			return values.map((value) => ({ name: attr.name, value }));
+			return values.map((value) => ({
+				name: attr.name,
+				value,
+				sourceSpan: attr.sourceSpan,
+			}));
 		});
 	return generateAttrCombinations(listOfPossibleAttributeValues);
 };

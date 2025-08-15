@@ -1,8 +1,10 @@
+import * as fs from "node:fs";
 import { generateHTMLs } from "./core/generator/index";
-import { parseTemplateFile } from "./core/parser/index";
+import { parse } from "./core/parser/index";
 import { getPropertiesFromComponent } from "./core/properties/index";
 import { transformParsedTemplate } from "./core/transformer/index";
 import type { HtmlVariation } from "./types";
+export type { HtmlVariation } from "./types";
 
 /**
  * Parses an Angular template file and returns an array of possible static HTML string variations.
@@ -10,8 +12,18 @@ import type { HtmlVariation } from "./types";
  * @param templatePath The absolute path to the Angular template file.
  * @returns An array of static HTML strings, representing different rendering possibilities of the template.
  */
-export const parseAngularTemplate = (templatePath: string): HtmlVariation[] => {
-	const { parsedTemplate, tmplAstTemplates } = parseTemplateFile(templatePath);
+export const parseAngularTemplateFile = (
+	templatePath: string,
+): HtmlVariation[] => {
+	const template = fs.readFileSync(templatePath, "utf-8");
+	return parseAngularTemplate(template, templatePath);
+};
+
+export const parseAngularTemplate = (
+	template: string,
+	templatePath: string,
+): HtmlVariation[] => {
+	const { parsedTemplate, tmplAstTemplates } = parse(template, templatePath);
 	const properties = getPropertiesFromComponent(templatePath);
 	const nodes = transformParsedTemplate(
 		parsedTemplate,

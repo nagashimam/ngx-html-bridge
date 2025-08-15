@@ -5,7 +5,6 @@
  * all `TmplAstTemplate` nodes for further processing.
  */
 
-import * as fs from "node:fs";
 import {
 	parseTemplate,
 	TmplAstRecursiveVisitor,
@@ -19,8 +18,7 @@ import {
  * @param templatePath The absolute path to the Angular template file.
  * @returns An object containing the parsed template and an array of `TmplAstTemplate` nodes.
  */
-export const parseTemplateFile = (templatePath: string) => {
-	const template = fs.readFileSync(templatePath, "utf-8");
+export const parse = (template: string, templatePath: string) => {
 	const parsedTemplate = parseTemplate(template, templatePath);
 	const collector = new TmplAstTemplateCollector();
 	tmplAstVisitAll(collector, parsedTemplate.nodes);

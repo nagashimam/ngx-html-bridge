@@ -2,7 +2,11 @@
  * @fileoverview
  * This file defines the core types used throughout the template transformation process.
  */
-import type { TmplAstNode, TmplAstTemplate } from "@angular/compiler";
+import type {
+	ParseSourceSpan,
+	TmplAstNode,
+	TmplAstTemplate,
+} from "@angular/compiler";
 
 /**
  * A function that transforms an array of `TmplAstNode` objects into a 2D array of DOM Nodes.
@@ -42,7 +46,11 @@ export type TmplAstNodeDispatcher = (
 /**
  * Represents an HTML attribute with a name and a value.
  */
-export type Attr = { name: string; value: string | undefined | null };
+export type Attr = {
+	name: string;
+	value: string | undefined | null;
+	sourceSpan: ParseSourceSpan;
+};
 
 /**
  * The name of a component property.
@@ -68,5 +76,5 @@ export type HtmlVariation = {
 	/**
 	 * The HTML string with additional metadata attributes for mapping back to the original template.
 	 */
-	anotated: string;
+	annotated: string;
 };
