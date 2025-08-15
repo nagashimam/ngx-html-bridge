@@ -26,42 +26,58 @@ import {
  */
 export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 	const properties = new Map<string, string>();
-	const componentFile = templateUrl.replace(".html", ".ts");
-	if (!existsSync(componentFile)) {
-		return properties;
-	}
 
-	const code = readFileSync(componentFile, { encoding: "utf8" });
-	const ast = parse(code, {
-		loc: true,
-		range: true,
-	});
-
-	const classDeclaration = getComponentDeclaration(ast);
+	const classDeclaration = getClassDeclaration(templateUrl);
 	if (!classDeclaration) {
 		return properties;
 	}
 
 	const propertiesAccessibleFromTemplate =
 		getPropertiesAccessibleFromTemplate(classDeclaration);
+	if (!propertiesAccessibleFromTemplate) {
+		return properties;
+	}
 
 	// TODO: Consider case like `[attr.data-foo]="flag ? '': undefined"`.
 	// Simply rewriting value to "some random text" is not ideal for cases like above
 	for (const property of propertiesAccessibleFromTemplate) {
-		const name = castNode<TSESTree.Identifier>(property.key).name;
-		const initialValue = (() => {
-			if (property.value === null) {
-				return "some random text";
-			}
+		try {
+			const name = castNode<TSESTree.Identifier>(property.key).name;
+			const initialValue = (() => {
+				if (property.value === null) {
+					return "some random text";
+				}
 
-			const literal = getLiteralFromValue(property.value);
-			return literal.value?.toString() || "some random text";
-		})();
+				const literal = getLiteralFromValue(property.value);
+				return literal.value?.toString() || "some random text";
+			})();
 
-		properties.set(name, initialValue);
+			properties.set(name, initialValue);
+		} catch {
+			continue;
+		}
 	}
 
 	return properties;
+};
+
+const getClassDeclaration = (templateUrl: string) => {
+	try {
+		const componentFile = templateUrl.replace(".html", ".ts");
+		if (!existsSync(componentFile)) {
+			return undefined;
+		}
+
+		const code = readFileSync(componentFile, { encoding: "utf8" });
+		const ast = parse(code, {
+			loc: true,
+			range: true,
+		});
+
+		return getComponentDeclaration(ast);
+	} catch {
+		return undefined;
+	}
 };
 
 /**
@@ -103,25 +119,29 @@ const getComponentDeclaration = (
 const getPropertiesAccessibleFromTemplate = (
 	classDeclaration: TSESTree.ClassDeclaration,
 ) => {
-	return classDeclaration.body.body
-		.filter((classElement) => {
-			if (!isTSEStreePropertyDefinition(classElement)) {
-				return false;
-			}
+	try {
+		return classDeclaration.body.body
+			.filter((classElement) => {
+				if (!isTSEStreePropertyDefinition(classElement)) {
+					return false;
+				}
 
-			if (!isTSESTreeIdentifier(classElement.key)) {
-				return false;
-			}
+				if (!isTSESTreeIdentifier(classElement.key)) {
+					return false;
+				}
 
-			const propertyDefinition =
-				castNode<TSESTree.PropertyDefinition>(classElement);
-			if (propertyDefinition.accessibility === "private") {
-				return false;
-			}
+				const propertyDefinition =
+					castNode<TSESTree.PropertyDefinition>(classElement);
+				if (propertyDefinition.accessibility === "private") {
+					return false;
+				}
 
-			return !!castNode<TSESTree.Literal>(classElement);
-		})
-		.map((definition) => castNode<TSESTree.PropertyDefinition>(definition));
+				return !!castNode<TSESTree.Literal>(classElement);
+			})
+			.map((definition) => castNode<TSESTree.PropertyDefinition>(definition));
+	} catch {
+		return undefined;
+	}
 };
 
 /**
