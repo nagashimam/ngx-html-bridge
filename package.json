@@ -1,10 +1,11 @@
 {
 	"name": "ngx-html-bridge",
+  "module":"module",
   "repository": {
     "type": "git",
     "url": "https://github.com/nagashimam/ngx-html-bridge"
   },
-	"version": "0.0.15",
+	"version": "0.0.19",
 	"description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
@@ -14,7 +15,8 @@
 		"lint": "biome check src --write",
 		"example": "node --import tsx examples/basic-usage.ts",
 		"update-attr": "node --import tsx scripts/extract-attributes.ts",
-		"publish": "npm publish"
+		"publish": "npm publish",
+    "prepublish": "npm run build"
 	},
 	"keywords": [
 		"Angular",

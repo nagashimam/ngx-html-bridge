@@ -15,7 +15,7 @@ export type TmplAstNodesTransformer = (
 	nodes: TmplAstNode[],
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-) => Node[][];
+) => Promise<Node[][]>;
 
 /**
  * A function that transforms a single leaf `TmplAstNode` (one with no children) into a 2D array of DOM Nodes.
@@ -32,7 +32,7 @@ export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
 	tmplAstNodesTransformer: TmplAstNodesTransformer,
-) => Node[][];
+) => Promise<Node[][]>;
 
 /**
  * A function that dispatches a `TmplAstNode` to the appropriate transformer.
@@ -41,7 +41,7 @@ export type TmplAstNodeDispatcher = (
 	astNode: TmplAstNode,
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-) => Node[][];
+) => Promise<Node[][]>;
 
 /**
  * Represents an HTML attribute with a name and a value.

@@ -5,7 +5,7 @@
  * bindings in the corresponding template.
  */
 import { existsSync, readFileSync } from "node:fs";
-import { parse, type TSESTree } from "@typescript-eslint/typescript-estree";
+import type { TSESTree } from "@typescript-eslint/typescript-estree";
 import type { Properties } from "../../types";
 import {
 	castNode,
@@ -24,10 +24,12 @@ import {
  * @param templateUrl The path to the component's HTML template file.
  * @returns A map of property names to their initial values.
  */
-export const getPropertiesFromComponent = (templateUrl: string): Properties => {
+export const getPropertiesFromComponent = async (
+	templateUrl: string,
+): Promise<Properties> => {
 	const properties = new Map<string, string>();
 
-	const classDeclaration = getClassDeclaration(templateUrl);
+	const classDeclaration = await getClassDeclaration(templateUrl);
 	if (!classDeclaration) {
 		return properties;
 	}
@@ -53,15 +55,13 @@ export const getPropertiesFromComponent = (templateUrl: string): Properties => {
 			})();
 
 			properties.set(name, initialValue);
-		} catch {
-			continue;
-		}
+		} catch {}
 	}
 
 	return properties;
 };
 
-const getClassDeclaration = (templateUrl: string) => {
+const getClassDeclaration = async (templateUrl: string) => {
 	try {
 		const componentFile = templateUrl.replace(".html", ".ts");
 		if (!existsSync(componentFile)) {
@@ -69,6 +69,8 @@ const getClassDeclaration = (templateUrl: string) => {
 		}
 
 		const code = readFileSync(componentFile, { encoding: "utf8" });
+
+		const { parse } = await import("@typescript-eslint/typescript-estree");
 		const ast = parse(code, {
 			loc: true,
 			range: true,

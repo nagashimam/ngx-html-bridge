@@ -4,6 +4,7 @@ import { parse } from "./core/parser/index";
 import { getPropertiesFromComponent } from "./core/properties/index";
 import { transformParsedTemplate } from "./core/transformer/index";
 import type { HtmlVariation } from "./types";
+
 export type { HtmlVariation } from "./types";
 
 /**
@@ -14,18 +15,21 @@ export type { HtmlVariation } from "./types";
  */
 export const parseAngularTemplateFile = (
 	templatePath: string,
-): HtmlVariation[] => {
+): Promise<HtmlVariation[]> => {
 	const template = fs.readFileSync(templatePath, "utf-8");
 	return parseAngularTemplate(template, templatePath);
 };
 
-export const parseAngularTemplate = (
+export const parseAngularTemplate = async (
 	template: string,
 	templatePath: string,
-): HtmlVariation[] => {
-	const { parsedTemplate, tmplAstTemplates } = parse(template, templatePath);
-	const properties = getPropertiesFromComponent(templatePath);
-	const nodes = transformParsedTemplate(
+): Promise<HtmlVariation[]> => {
+	const { parsedTemplate, tmplAstTemplates } = await parse(
+		template,
+		templatePath,
+	);
+	const properties = await getPropertiesFromComponent(templatePath);
+	const nodes = await transformParsedTemplate(
 		parsedTemplate,
 		tmplAstTemplates,
 		properties,

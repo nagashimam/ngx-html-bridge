@@ -1,13 +1,6 @@
-import {
-	type ParsedTemplate,
-	TmplAstBoundText,
-	TmplAstDeferredBlock,
-	TmplAstElement,
-	TmplAstForLoopBlock,
-	TmplAstIfBlock,
-	TmplAstSwitchBlock,
-	TmplAstTemplate,
-	TmplAstText,
+import type {
+	ParsedTemplate,
+	TmplAstTemplate as Template,
 } from "@angular/compiler";
 import type {
 	Properties,
@@ -33,9 +26,9 @@ import { transformTmplAstText } from "./text";
  */
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
-	tmplAstTemplates: TmplAstTemplate[],
+	tmplAstTemplates: Template[],
 	properties: Properties,
-): Node[][] => {
+) => {
 	return transformTmplAstNodes(
 		parsedTemplate.nodes,
 		tmplAstTemplates,
@@ -50,7 +43,7 @@ export const transformParsedTemplate = (
  * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
  * @returns A 2D array of DOM Nodes representing the transformed AST nodes.
  */
-const transformTmplAstNodes: TmplAstNodesTransformer = (
+const transformTmplAstNodes: TmplAstNodesTransformer = async (
 	astNodes,
 	tmplAstTemplates,
 	properties,
@@ -58,7 +51,7 @@ const transformTmplAstNodes: TmplAstNodesTransformer = (
 	const parsed = astNodes.map((astNode) =>
 		transformTmplAstNode(astNode, tmplAstTemplates, properties),
 	);
-	return generateCombinations(parsed);
+	return generateCombinations(await Promise.all(parsed));
 };
 
 /**
@@ -68,11 +61,22 @@ const transformTmplAstNodes: TmplAstNodesTransformer = (
  * @param tmplAstTemplates A list of all TmplAstTemplate nodes in the parsed template.
  * @returns A 2D array of DOM Nodes representing the transformed AST node.
  */
-const transformTmplAstNode: TmplAstNodeDispatcher = (
+const transformTmplAstNode: TmplAstNodeDispatcher = async (
 	astNode,
 	tmplAstTemplates,
 	properties,
 ) => {
+	const {
+		TmplAstBoundText,
+		TmplAstDeferredBlock,
+		TmplAstElement,
+		TmplAstForLoopBlock,
+		TmplAstIfBlock,
+		TmplAstSwitchBlock,
+		TmplAstTemplate,
+		TmplAstText,
+	} = await import("@angular/compiler");
+
 	if (astNode instanceof TmplAstIfBlock) {
 		return transformTmplAstIfBlock(
 			astNode,

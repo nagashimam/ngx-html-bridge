@@ -35,10 +35,14 @@ export const attributeNames: string[] = [];
  */
 export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	TmplAstElement
-> = (element, tmplAstTemplates, properties, transformTmplAstNodes) => {
+> = async (element, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	if (element.name === "ng-container") {
 		return [
-			...transformTmplAstNodes(element.children, tmplAstTemplates, properties),
+			...(await transformTmplAstNodes(
+				element.children,
+				tmplAstTemplates,
+				properties,
+			)),
 		];
 	}
 	const parsedElementNodes: Node[][] = [];
@@ -48,7 +52,7 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 		properties,
 	);
 	const attribute2DArray = pairwiseAttributeNameAndValue(element.attributes);
-	const children2DArray = transformTmplAstNodes(
+	const children2DArray = await transformTmplAstNodes(
 		element.children,
 		tmplAstTemplates,
 		properties,

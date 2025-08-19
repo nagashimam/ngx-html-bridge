@@ -12,12 +12,12 @@ import type { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	TmplAstForLoopBlock
-> = (forBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
+> = async (forBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
 	const result: Node[][] = [];
 
 	// Handle case for no loop
 	if (forBlock.empty && forBlock.empty.children.length > 0) {
-		for (const parsedEmptyBlock of transformTmplAstNodes(
+		for (const parsedEmptyBlock of await transformTmplAstNodes(
 			forBlock.empty.children,
 			tmplAstTemplates,
 			properties,
@@ -29,7 +29,7 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	}
 
 	// Handle case for loop once
-	for (const parsedForBlock of transformTmplAstNodes(
+	for (const parsedForBlock of await transformTmplAstNodes(
 		forBlock.children,
 		tmplAstTemplates,
 		properties,
@@ -38,7 +38,7 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	}
 
 	// Handle case for loop twice
-	for (const parsedForBlock of transformTmplAstNodes(
+	for (const parsedForBlock of await transformTmplAstNodes(
 		[...forBlock.children, ...forBlock.children],
 		tmplAstTemplates,
 		properties,
