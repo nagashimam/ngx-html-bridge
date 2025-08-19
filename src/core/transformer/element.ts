@@ -15,6 +15,7 @@ import { VALID_HTML_ATTRIBUTES } from "../html-spec/attributes";
 import {
 	castAST,
 	castNode,
+	isTSESTreeCallExpression,
 	isTSESTreeConditionalExpression,
 	isTSESTreeIdentifier,
 	isTSESTreeLiteral,
@@ -210,6 +211,11 @@ const parseExpressionIntoLiterals = (
 			return [undefined];
 		}
 		return [properties.get(name) || "some random value"];
+	}
+
+	if (isTSESTreeCallExpression(expression)) {
+		const callee = castNode<TSESTree.CallExpression>(expression).callee;
+		return parseExpressionIntoLiterals(callee, properties);
 	}
 
 	return ["some random value"];

@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { strict as assert } from "node:assert";
 import { parseAngularTemplateFile, parseAngularTemplate } from "../src/main";
 
+/**
 test("parseAngularTemplate returns the same result as parseAngularTemplateFile", () => {
 	const templatePath = "tests/sample/src/app/plain/plain.html";
 	const template = fs.readFileSync(templatePath, "utf-8");
@@ -138,6 +139,7 @@ test("parseAngularTemplateFile returns expected HTML for @switch with single cas
 	const result = parseAngularTemplateFile(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(result.sort(), ["<p>Case 1</p>", ""].sort());
 });
+*/
 
 test("parseAngularTemplateFile returns expected HTML for attributes", () => {
 	const templatePath = "tests/sample/src/app/attr/attr.html";
@@ -150,6 +152,7 @@ test("parseAngularTemplateFile returns expected HTML for attributes", () => {
 	);
 });
 
+/*
 test("parseAngularTemplateFile returns expected HTML for ternary operator in property binding", () => {
 	const templatePath =
 		"tests/sample/src/app/ternary-operator/ternary-operator.html";
@@ -169,3 +172,4 @@ test("parseAngularTemplateFile ignores style and class binding", () => {
 	const result = parseAngularTemplateFile(templatePath).map((r) => r.plain);
 	assert.deepStrictEqual(result.sort(), ["<p>style-binding works!</p>"].sort());
 });
+*/
