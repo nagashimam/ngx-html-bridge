@@ -160,17 +160,22 @@ const pairwisePropertyNameAndValue = (
 			return !(details.includes("class.") || details.includes("style."));
 		})
 		.map((attr) => {
-			const source = castAST<ASTWithSource>(attr.value).source || "";
-			const body = parse(source).body[0];
-			const expression =
-				castNode<TSESTree.ExpressionStatement>(body).expression;
-			const values = parseExpressionIntoLiterals(expression, properties);
-			return values.map((value) => ({
-				name: attr.name,
-				value,
-				sourceSpan: attr.sourceSpan,
-			}));
-		});
+			try {
+				const source = castAST<ASTWithSource>(attr.value).source || "";
+				const body = parse(source).body[0];
+				const expression =
+					castNode<TSESTree.ExpressionStatement>(body).expression;
+				const values = parseExpressionIntoLiterals(expression, properties);
+				return values.map((value) => ({
+					name: attr.name,
+					value,
+					sourceSpan: attr.sourceSpan,
+				}));
+			} catch {
+				return undefined;
+			}
+		})
+		.filter((attr) => !!attr);
 	return generateAttrCombinations(listOfPossibleAttributeValues);
 };
 
