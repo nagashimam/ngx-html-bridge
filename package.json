@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/nagashimam/ngx-html-bridge"
   },
-	"version": "0.0.20",
+	"version": "0.0.21",
 	"description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",

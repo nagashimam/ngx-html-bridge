@@ -151,7 +151,9 @@ const pairwiseAttributeNameAndValue = (
 	const attributes = attributesOrInputs.filter(
 		(attributeOrInput) =>
 			VALID_HTML_ATTRIBUTES.has(attributeOrInput.name) ||
-			option.includedAttributes?.includes(attributeOrInput.name),
+			option.includedAttributes
+				?.map((attr) => new RegExp(attr))
+				.find((regex) => regex.test(attributeOrInput.name)),
 	);
 	return [[...attributes]];
 };
