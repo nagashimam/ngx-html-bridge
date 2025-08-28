@@ -3,6 +3,7 @@ import type {
 	TmplAstTemplate as Template,
 } from "@angular/compiler";
 import type {
+	BridgeOption,
 	Properties,
 	TmplAstNodeDispatcher,
 	TmplAstNodesTransformer,
@@ -28,11 +29,13 @@ export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
 	tmplAstTemplates: Template[],
 	properties: Properties,
+	option: BridgeOption,
 ) => {
 	return transformTmplAstNodes(
 		parsedTemplate.nodes,
 		tmplAstTemplates,
 		properties,
+		option,
 	);
 };
 
@@ -47,9 +50,10 @@ const transformTmplAstNodes: TmplAstNodesTransformer = async (
 	astNodes,
 	tmplAstTemplates,
 	properties,
+	option,
 ) => {
 	const parsed = astNodes.map((astNode) =>
-		transformTmplAstNode(astNode, tmplAstTemplates, properties),
+		transformTmplAstNode(astNode, tmplAstTemplates, properties, option),
 	);
 	return generateCombinations(await Promise.all(parsed));
 };
@@ -65,6 +69,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 	astNode,
 	tmplAstTemplates,
 	properties,
+	option,
 ) => {
 	const {
 		TmplAstBoundText,
@@ -84,6 +89,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 
@@ -93,6 +99,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			tmplAstTemplates,
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 
@@ -102,6 +109,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			tmplAstTemplates,
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 
@@ -111,6 +119,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			tmplAstTemplates,
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 
@@ -120,6 +129,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			tmplAstTemplates,
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 
@@ -129,6 +139,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			tmplAstTemplates,
 			properties,
 			transformTmplAstNodes,
+			option,
 		);
 	}
 

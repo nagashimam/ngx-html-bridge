@@ -3,9 +3,9 @@ import { generateHTMLs } from "./core/generator/index";
 import { parse } from "./core/parser/index";
 import { getPropertiesFromComponent } from "./core/properties/index";
 import { transformParsedTemplate } from "./core/transformer/index";
-import type { HtmlVariation } from "./types";
+import type { BridgeOption, HtmlVariation } from "./types";
 
-export type { HtmlVariation } from "./types";
+export type { BridgeOption, HtmlVariation } from "./types";
 
 /**
  * Parses an Angular template file and returns an array of possible static HTML string variations.
@@ -15,14 +15,16 @@ export type { HtmlVariation } from "./types";
  */
 export const parseAngularTemplateFile = (
 	templatePath: string,
+	option: BridgeOption = {},
 ): Promise<HtmlVariation[]> => {
 	const template = fs.readFileSync(templatePath, "utf-8");
-	return parseAngularTemplate(template, templatePath);
+	return parseAngularTemplate(template, templatePath, option);
 };
 
 export const parseAngularTemplate = async (
 	template: string,
 	templatePath: string,
+	option: BridgeOption = {},
 ): Promise<HtmlVariation[]> => {
 	const { parsedTemplate, tmplAstTemplates } = await parse(
 		template,
@@ -33,6 +35,7 @@ export const parseAngularTemplate = async (
 		parsedTemplate,
 		tmplAstTemplates,
 		properties,
+		option,
 	);
 	return generateHTMLs(nodes);
 };

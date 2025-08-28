@@ -7,6 +7,7 @@ import type {
 import { parse, type TSESTree } from "@typescript-eslint/typescript-estree";
 import type {
 	Attr,
+	BridgeOption,
 	Properties,
 	TmplAstBranchNodeTransformer,
 } from "../../types";
@@ -35,13 +36,20 @@ export const attributeNames: string[] = [];
  */
 export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	TmplAstElement
-> = async (element, tmplAstTemplates, properties, transformTmplAstNodes) => {
+> = async (
+	element,
+	tmplAstTemplates,
+	properties,
+	transformTmplAstNodes,
+	option,
+) => {
 	if (element.name === "ng-container") {
 		return [
 			...(await transformTmplAstNodes(
 				element.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		];
 	}
@@ -50,12 +58,17 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	const properties2DArray = pairwisePropertyNameAndValue(
 		element.inputs,
 		properties,
+		option,
 	);
-	const attribute2DArray = pairwiseAttributeNameAndValue(element.attributes);
+	const attribute2DArray = pairwiseAttributeNameAndValue(
+		element.attributes,
+		option,
+	);
 	const children2DArray = await transformTmplAstNodes(
 		element.children,
 		tmplAstTemplates,
 		properties,
+		option,
 	);
 
 	for (const props of properties2DArray) {
@@ -128,14 +141,17 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
  */
 const pairwiseAttributeNameAndValue = (
 	tmplAstTextAttributes: TmplAstTextAttribute[],
+	option: BridgeOption,
 ): Attr[][] => {
 	const attributesOrInputs = tmplAstTextAttributes.map((attr) => ({
 		name: attr.name,
 		value: attr.value,
 		sourceSpan: attr.sourceSpan,
 	}));
-	const attributes = attributesOrInputs.filter((attributeOrInput) =>
-		VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
+	const attributes = attributesOrInputs.filter(
+		(attributeOrInput) =>
+			VALID_HTML_ATTRIBUTES.has(attributeOrInput.name) ||
+			option.includedAttributes?.includes(attributeOrInput.name),
 	);
 	return [[...attributes]];
 };
@@ -151,10 +167,13 @@ const pairwiseAttributeNameAndValue = (
 const pairwisePropertyNameAndValue = (
 	tmplAstBoundAttributes: TmplAstBoundAttribute[],
 	properties: Properties,
+	option: BridgeOption,
 ): Attr[][] => {
 	const listOfPossibleAttributeValues: Attr[][] = tmplAstBoundAttributes
-		.filter((attributeOrInput) =>
-			VALID_HTML_ATTRIBUTES.has(attributeOrInput.name),
+		.filter(
+			(attributeOrInput) =>
+				VALID_HTML_ATTRIBUTES.has(attributeOrInput.name) ||
+				option.includedAttributes?.includes(attributeOrInput.name),
 		)
 		.filter((attribute) => {
 			const details = attribute.keySpan.details;

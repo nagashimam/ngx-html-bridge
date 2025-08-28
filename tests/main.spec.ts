@@ -30,7 +30,9 @@ test("parseAngularTemplateFile returns expected HTML for a plain template", asyn
 
 test("parseAngularTemplateFile returns expected HTML for @if, @else if, and @else blocks", async () => {
 	const templatePath = "tests/sample/src/app/if/if.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -44,7 +46,9 @@ test("parseAngularTemplateFile returns expected HTML for @if, @else if, and @els
 test("parseAngularTemplateFile returns expected HTML for @if without else", async () => {
 	const templatePath =
 		"tests/sample/src/app/if-without-else/if-without-else.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Condition is true!</p>", ""].sort(),
@@ -53,7 +57,9 @@ test("parseAngularTemplateFile returns expected HTML for @if without else", asyn
 
 test("parseAngularTemplateFile returns expected HTML for @switch, @case, and @default blocks", async () => {
 	const templatePath = "tests/sample/src/app/switch/switch.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Case 1</p>", "<p>Case 2</p>", "<p>Default case</p>"].sort(),
@@ -62,7 +68,9 @@ test("parseAngularTemplateFile returns expected HTML for @switch, @case, and @de
 
 test("parseAngularTemplateFile returns expected HTML for @for block", async () => {
 	const templatePath = "tests/sample/src/app/for/for.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -76,7 +84,9 @@ test("parseAngularTemplateFile returns expected HTML for @for block", async () =
 test("parseAngularTemplateFile returns expected HTML for @for block with @empty", async () => {
 	const templatePath =
 		"tests/sample/src/app/for-with-empty/for-with-empty.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -89,7 +99,9 @@ test("parseAngularTemplateFile returns expected HTML for @for block with @empty"
 
 test("parseAngularTemplateFile returns expected HTML for @defer block", async () => {
 	const templatePath = "tests/sample/src/app/defer/defer.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -102,7 +114,9 @@ test("parseAngularTemplateFile returns expected HTML for @defer block", async ()
 
 test("parseAngularTemplateFile returns expected HTML for *ngIf", async () => {
 	const templatePath = "tests/sample/src/app/ngif/ngif.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -115,7 +129,9 @@ test("parseAngularTemplateFile returns expected HTML for *ngIf", async () => {
 test("parseAngularTemplateFile returns expected HTML for *ngIf without else", async () => {
 	const templatePath =
 		"tests/sample/src/app/ngif-without-else/ngif-without-else.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<div><p>Condition is true!</p></div>", ""].sort(),
@@ -125,7 +141,9 @@ test("parseAngularTemplateFile returns expected HTML for *ngIf without else", as
 test("parseAngularTemplateFile returns expected HTML for *ngIf with then", async () => {
 	const templatePath =
 		"tests/sample/src/app/ngif-with-then/ngif-with-then.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		["<p>Condition is true (then block)!</p>", ""].sort(),
@@ -135,13 +153,17 @@ test("parseAngularTemplateFile returns expected HTML for *ngIf with then", async
 test("parseAngularTemplateFile returns expected HTML for @switch with single case and no default", async () => {
 	const templatePath =
 		"tests/sample/src/app/switch-without-default/switch-without-default.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(result.sort(), ["<p>Case 1</p>", ""].sort());
 });
 
 test("parseAngularTemplateFile returns expected HTML for attributes", async () => {
 	const templatePath = "tests/sample/src/app/attr/attr.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -153,7 +175,9 @@ test("parseAngularTemplateFile returns expected HTML for attributes", async () =
 test("parseAngularTemplateFile returns expected HTML for ternary operator in property binding", async () => {
 	const templatePath =
 		"tests/sample/src/app/ternary-operator/ternary-operator.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(
 		result.sort(),
 		[
@@ -166,6 +190,21 @@ test("parseAngularTemplateFile returns expected HTML for ternary operator in pro
 
 test("parseAngularTemplateFile ignores style and class binding", async () => {
 	const templatePath = "tests/sample/src/app/style-binding/style-binding.html";
-	const result = (await parseAngularTemplateFile(templatePath)).map((r) => r.plain);
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
 	assert.deepStrictEqual(result.sort(), ["<p>style-binding works!</p>"].sort());
+});
+
+test("should include custom attributes when specified in options", async () => {
+	const templatePath =
+		"tests/sample/src/app/included-attributes/included-attributes.html";
+	const options = { includedAttributes: ["custom-attribute"] };
+	const result = (await parseAngularTemplateFile(templatePath, options)).map(
+		(r) => r.plain,
+	);
+	assert.deepStrictEqual(
+		result.sort(),
+		['<div custom-attribute="test-value">Hello</div>'].sort(),
+	);
 });
