@@ -21,6 +21,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 	tmplAstTemplates,
 	properties,
 	transformTmplAstNodes,
+	option,
 ) => {
 	const results: Node[][] = [];
 
@@ -33,6 +34,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 				thenClause.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		);
 	} else {
@@ -41,6 +43,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 				ngIfTemplate.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		);
 	}
@@ -51,6 +54,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 				elseClause.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		);
 	} else {

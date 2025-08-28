@@ -196,7 +196,7 @@ test("parseAngularTemplateFile ignores style and class binding", async () => {
 	assert.deepStrictEqual(result.sort(), ["<p>style-binding works!</p>"].sort());
 });
 
-test("should include custom attributes when specified in options", async () => {
+test("parseAnglarTemplateFile includes custom attributes when specified in options", async () => {
 	const templatePath =
 		"tests/sample/src/app/included-attributes/included-attributes.html";
 	const options = { includedAttributes: ["custom-attribute"] };

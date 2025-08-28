@@ -12,7 +12,13 @@ import type { TmplAstBranchNodeTransformer } from "../../types";
  */
 export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 	TmplAstIfBlock
-> = async (ifBlock, tmplAstTemplates, properties, transformTmplAstNodes) => {
+> = async (
+	ifBlock,
+	tmplAstTemplates,
+	properties,
+	transformTmplAstNodes,
+	option,
+) => {
 	const result: Node[][] = [];
 
 	if (ifBlock.branches.length === 1) {
@@ -25,6 +31,7 @@ export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 				branch.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		);
 	}

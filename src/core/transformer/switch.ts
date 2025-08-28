@@ -17,6 +17,7 @@ export const transformTmplAstSwitchBlock: TmplAstBranchNodeTransformer<
 	tmplAstTemplates,
 	properties,
 	transformTmplAstNodes,
+	option,
 ) => {
 	const result: Node[][] = [];
 
@@ -26,6 +27,7 @@ export const transformTmplAstSwitchBlock: TmplAstBranchNodeTransformer<
 				switchCase.children,
 				tmplAstTemplates,
 				properties,
+				option,
 			)),
 		);
 	}
