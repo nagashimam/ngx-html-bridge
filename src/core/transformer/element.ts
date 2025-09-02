@@ -10,9 +10,9 @@ import type {
 	BridgeOption,
 	Properties,
 	TmplAstBranchNodeTransformer,
-} from "../../types";
-import { document } from "../dom";
-import { VALID_HTML_ATTRIBUTES } from "../html-spec/attributes";
+} from "../../types/index.js";
+import { document } from "../dom/index.js";
+import { VALID_HTML_ATTRIBUTES } from "../html-spec/attributes.js";
 import {
 	castAST,
 	castNode,
@@ -20,8 +20,8 @@ import {
 	isTSESTreeConditionalExpression,
 	isTSESTreeIdentifier,
 	isTSESTreeLiteral,
-} from "../properties/utils";
-import { generateAttrCombinations } from "./combination-generator";
+} from "../properties/utils.js";
+import { generateAttrCombinations } from "./combination-generator.js";
 
 export const attributeNames: string[] = [];
 

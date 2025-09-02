@@ -1,6 +1,6 @@
 import type { TmplAstText } from "@angular/compiler";
-import type { TmplAstLeafNodeTransformer } from "../../types";
-import { document } from "../dom";
+import type { TmplAstLeafNodeTransformer } from "../../types/index.js";
+import { document } from "../dom/index.js";
 
 /**
  * Transforms a TmplAstText node into a text node.

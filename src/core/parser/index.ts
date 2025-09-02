@@ -6,6 +6,11 @@
  */
 
 import type { TmplAstTemplate } from "@angular/compiler";
+import {
+	parseTemplate,
+	tmplAstVisitAll,
+	TmplAstRecursiveVisitor,
+} from "@angular/compiler";
 
 /**
  * Parses an Angular template file and extracts the parsed template and all `TmplAstTemplate` nodes.
@@ -13,10 +18,7 @@ import type { TmplAstTemplate } from "@angular/compiler";
  * @param templatePath The absolute path to the Angular template file.
  * @returns An object containing the parsed template and an array of `TmplAstTemplate` nodes.
  */
-export const parse = async (template: string, templatePath: string) => {
-	const { parseTemplate, tmplAstVisitAll, TmplAstRecursiveVisitor } =
-		await import("@angular/compiler");
-
+export const parse = (template: string, templatePath: string) => {
 	/**
 	 * A visitor that collects all `TmplAstTemplate` nodes from an Angular AST.
 	 * This is used to gather all `<ng-template>` elements, which are crucial

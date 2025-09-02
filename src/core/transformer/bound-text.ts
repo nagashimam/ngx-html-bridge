@@ -1,6 +1,6 @@
 import type { TmplAstBoundText } from "@angular/compiler";
-import type { TmplAstLeafNodeTransformer } from "../../types";
-import { document } from "../dom";
+import type { TmplAstLeafNodeTransformer } from "../../types/index.js";
+import { document } from "../dom/index.js";
 
 /**
  * Transforms a TmplAstBoundText node into a text node with a placeholder value.

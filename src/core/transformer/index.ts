@@ -7,16 +7,27 @@ import type {
 	Properties,
 	TmplAstNodeDispatcher,
 	TmplAstNodesTransformer,
-} from "../../types";
-import { transformTmplAstBoundText } from "./bound-text";
-import { generateCombinations } from "./combination-generator";
-import { transformTmplAstDeferredBlock } from "./defer";
-import { transformTmplAstElement } from "./element";
-import { transformTmplAstForLoopBlock } from "./for";
-import { transformTmplAstIfBlock } from "./if";
-import { transformTmplAstSwitchBlock } from "./switch";
-import { transformTmplAstTemplate } from "./template";
-import { transformTmplAstText } from "./text";
+} from "../../types/index.js";
+import { transformTmplAstBoundText } from "./bound-text.js";
+import { generateCombinations } from "./combination-generator.js";
+import { transformTmplAstDeferredBlock } from "./defer.js";
+import { transformTmplAstElement } from "./element.js";
+import { transformTmplAstForLoopBlock } from "./for.js";
+import { transformTmplAstIfBlock } from "./if.js";
+import { transformTmplAstSwitchBlock } from "./switch.js";
+import { transformTmplAstTemplate } from "./template.js";
+import { transformTmplAstText } from "./text.js";
+
+import {
+	TmplAstBoundText,
+	TmplAstDeferredBlock,
+	TmplAstElement,
+	TmplAstForLoopBlock,
+	TmplAstIfBlock,
+	TmplAstSwitchBlock,
+	TmplAstTemplate,
+	TmplAstText,
+} from "@angular/compiler";
 
 /**
  * Transforms a ParsedTemplate object into a 2D array of DOM Nodes.
@@ -71,17 +82,6 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 	properties,
 	option,
 ) => {
-	const {
-		TmplAstBoundText,
-		TmplAstDeferredBlock,
-		TmplAstElement,
-		TmplAstForLoopBlock,
-		TmplAstIfBlock,
-		TmplAstSwitchBlock,
-		TmplAstTemplate,
-		TmplAstText,
-	} = await import("@angular/compiler");
-
 	if (astNode instanceof TmplAstIfBlock) {
 		return transformTmplAstIfBlock(
 			astNode,

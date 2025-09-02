@@ -1,5 +1,5 @@
 import type { TmplAstSwitchBlock } from "@angular/compiler";
-import type { TmplAstBranchNodeTransformer } from "../../types";
+import type { TmplAstBranchNodeTransformer } from "../../types/index.js";
 
 /**
  * Transforms a TmplAstSwitchBlock node into a 2D array of DOM Nodes.
