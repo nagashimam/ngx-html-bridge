@@ -1,4 +1,4 @@
-import type { Attr } from "../../types";
+import type { Attr } from "../../types/index.js";
 /**
  * Combine all combinations from a 3D array of nodes.
  * Example: Takes [[[div#1]],[[div#2]],[[div#3],[div#4,div#5]]] and outputs [[div#1,div#2,div#3, div#4],[div#1,div#2,div#3,div#5]]

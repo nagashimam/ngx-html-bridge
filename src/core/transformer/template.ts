@@ -1,6 +1,6 @@
 import type { TmplAstTemplate } from "@angular/compiler";
-import type { TmplAstBranchNodeTransformer } from "../../types";
-import { transformTmplAstTemplateNgIf } from "./ng-if";
+import type { TmplAstBranchNodeTransformer } from "../../types/index.js";
+import { transformTmplAstTemplateNgIf } from "./ng-if.js";
 
 /**
  * Transforms a TmplAstTemplate node into a 2D array of DOM Nodes.

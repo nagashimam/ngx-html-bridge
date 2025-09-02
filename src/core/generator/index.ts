@@ -1,6 +1,6 @@
-import type { HtmlVariation } from "../../types";
-import { document } from "../dom";
-import { attributeNames } from "../transformer/element";
+import type { HtmlVariation } from "../../types/index.js";
+import { document } from "../dom/index.js";
+import { attributeNames } from "../transformer/element.js";
 
 /**
  * Generates an array of HTML strings from a 2D array of DOM Nodes.

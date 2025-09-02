@@ -6,7 +6,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import type { TSESTree } from "@typescript-eslint/typescript-estree";
-import type { Properties } from "../../types";
+import type { Properties } from "../../types/index.js";
 import {
 	castNode,
 	isComponentClass,
@@ -15,7 +15,8 @@ import {
 	isTSESTreeCallExpression,
 	isTSESTreeIdentifier,
 	isTSEStreePropertyDefinition,
-} from "./utils";
+} from "./utils.js";
+import { parse } from "@typescript-eslint/typescript-estree";
 
 /**
  * Extracts public and protected properties from an Angular component's TypeScript
@@ -70,7 +71,6 @@ const getClassDeclaration = async (templateUrl: string) => {
 
 		const code = readFileSync(componentFile, { encoding: "utf8" });
 
-		const { parse } = await import("@typescript-eslint/typescript-estree");
 		const ast = parse(code, {
 			loc: true,
 			range: true,

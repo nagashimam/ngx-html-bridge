@@ -15,7 +15,7 @@ export type TmplAstNodesTransformer = (
 	nodes: TmplAstNode[],
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-	option: BridgeOption,
+	option: typeof BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -33,7 +33,7 @@ export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
 	tmplAstNodesTransformer: TmplAstNodesTransformer,
-	option: BridgeOption,
+	option: typeof BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -43,7 +43,7 @@ export type TmplAstNodeDispatcher = (
 	astNode: TmplAstNode,
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-	option: BridgeOption,
+	option: typeof BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -85,9 +85,9 @@ export type HtmlVariation = {
 /**
  * Represents options for the bridge.
  */
-export interface BridgeOption {
+export const BridgeOption = {
 	/**
 	 * A list of attribute names to include in the final HTML.
-	 */
-	includedAttributes?: string[];
-}
+	 */ includedAttributes: [] as string[],
+};
+export type BridgeOption = typeof BridgeOption;
