@@ -11,7 +11,7 @@
   "type":"module",
 	"types": "dist/main.d.ts",
 	"scripts": {
-		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --bundle --tree-shaking=true --platform=node --format=esm --external:'./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js' --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
+		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --bundle --tree-shaking=true --platform=node --format=esm --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
 		"test": "node --import tsx --test tests/main.spec.ts",
 		"lint": "biome check src --write",
 		"example": "node --import tsx examples/basic-usage.ts",
