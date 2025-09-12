@@ -1,44 +1,44 @@
 {
-	"name": "ngx-html-bridge",
-	"module": "module",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/nagashimam/ngx-html-bridge"
-	},
-	"version": "0.0.21",
-	"description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
-	"main": "dist/main.js",
-  "type":"module",
-	"types": "dist/main.d.ts",
-	"scripts": {
-		"build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --bundle --tree-shaking=true --platform=node --format=esm --external:'./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js' --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
-		"test": "node --import tsx --test tests/main.spec.ts",
-		"lint": "biome check src --write",
-		"example": "node --import tsx examples/basic-usage.ts",
-		"update-attr": "node --import tsx scripts/extract-attributes.ts",
-		"publish": "npm publish",
-		"prepublish": "npm run build"
-	},
-	"keywords": [
-		"Angular",
-		"Template",
-		"Parser",
-		"HTML",
-		"Validator"
-	],
-	"author": "Your Name",
-	"license": "MIT",
-	"dependencies": {
-		"@angular/compiler": "^20.1.0",
-		"@typescript-eslint/typescript-estree": "^8.38.0",
-		"jsdom": "^26.1.0"
-	},
-	"devDependencies": {
-		"@markuplint/html-spec": "^4.14.2",
-		"@types/jsdom": "^21.1.7",
-		"@types/node": "^24.1.0",
-		"esbuild": "0.25.9",
-		"tsx": "^4.11.0",
-		"typescript": "^5.8.3"
-	}
+  "name": "ngx-html-bridge",
+  "module": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nagashimam/ngx-html-bridge"
+  },
+  "version": "0.0.27",
+  "description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
+  "main": "dist/main.js",
+  "type": "module",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --bundle --tree-shaking=true --platform=node --format=esm --external:'./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js' --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
+    "test": "node --import tsx --test tests/main.spec.ts",
+    "lint": "biome check src --write",
+    "example": "node --import tsx examples/basic-usage.ts",
+    "update-attr": "node --import tsx scripts/extract-attributes.ts",
+    "publish": "npm publish",
+    "prepublish": "npm run build"
+  },
+  "keywords": [
+    "Angular",
+    "Template",
+    "Parser",
+    "HTML",
+    "Validator"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@angular/compiler": "^20.1.0",
+    "@typescript-eslint/typescript-estree": "^8.38.0",
+    "jsdom": "^26.1.0"
+  },
+  "devDependencies": {
+    "@markuplint/html-spec": "^4.14.2",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^24.1.0",
+    "esbuild": "0.25.9",
+    "tsx": "^4.11.0",
+    "typescript": "^5.8.3"
+  }
 }

@@ -5,18 +5,19 @@
  * bindings in the corresponding template.
  */
 import { existsSync, readFileSync } from "node:fs";
-import type { TSESTree } from "@typescript-eslint/typescript-estree";
+import { parse, type TSESTree } from "@typescript-eslint/typescript-estree";
 import type { Properties } from "../../types/index.js";
 import {
 	castNode,
 	isComponentClass,
 	isTSESClassDeclaration,
 	isTSESExportNamedDeclaration,
+	isTSESTreeArrayExpression,
 	isTSESTreeCallExpression,
 	isTSESTreeIdentifier,
+	isTSESTreeSpreadElement,
 	isTSEStreePropertyDefinition,
 } from "./utils.js";
-import { parse } from "@typescript-eslint/typescript-estree";
 
 /**
  * Extracts public and protected properties from an Angular component's TypeScript
@@ -51,8 +52,7 @@ export const getPropertiesFromComponent = async (
 					return "some random text";
 				}
 
-				const literal = getLiteralFromValue(property.value);
-				return literal.value?.toString() || "some random text";
+				return getLiteralValue(property.value);
 			})();
 
 			properties.set(name, initialValue);
@@ -152,10 +152,46 @@ const getPropertiesAccessibleFromTemplate = (
  * @param value The expression node for the property's value.
  * @returns The `Literal` node containing the value.
  */
-const getLiteralFromValue = (value: TSESTree.Expression) => {
+const getLiteralValue = (value: TSESTree.Expression): string => {
+	if (isTSESTreeArrayExpression(value)) {
+		const arrayExpression = castNode<TSESTree.ArrayExpression>(value);
+		return convertArrayExpressionToString(arrayExpression);
+	}
+
+	const convertNodeToString = (node: TSESTree.Node) => {
+		return (
+			castNode<TSESTree.Literal>(node).value?.toString() || "some random text"
+		);
+	};
+
 	if (isTSESTreeCallExpression(value)) {
 		const argument = castNode<TSESTree.CallExpression>(value).arguments[0];
-		return castNode<TSESTree.Literal>(argument);
+		return convertNodeToString(argument);
 	}
-	return castNode<TSESTree.Literal>(value);
+
+	return convertNodeToString(value);
+};
+
+const convertArrayExpressionToString = (
+	arrayExpression: TSESTree.ArrayExpression,
+) => {
+	const elements: string[] = [];
+	arrayExpression.elements
+		.filter((element) => !!element)
+		.forEach((element) => {
+			// spreadElement is things like `[...1,2,3]`. This thing could be nested inside array expression like [...["one", "two"], "three"]
+			if (isTSESTreeSpreadElement(element)) {
+				const spreadElement = JSON.parse(
+					getLiteralValue(castNode<TSESTree.SpreadElement>(element).argument),
+				);
+				if (Array.isArray(spreadElement)) {
+					spreadElement.forEach((element) => {
+						elements.push(element);
+					});
+				}
+			} else {
+				elements.push(getLiteralValue(castNode<TSESTree.Expression>(element)));
+			}
+		});
+	return JSON.stringify(elements);
 };

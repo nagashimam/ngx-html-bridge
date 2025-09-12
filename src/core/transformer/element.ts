@@ -16,6 +16,7 @@ import { VALID_HTML_ATTRIBUTES } from "../html-spec/attributes.js";
 import {
 	castAST,
 	castNode,
+	isTSESTreeBinaryExpression,
 	isTSESTreeCallExpression,
 	isTSESTreeConditionalExpression,
 	isTSESTreeIdentifier,
@@ -186,8 +187,14 @@ const pairwisePropertyNameAndValue = (
 		})
 		.map((attr) => {
 			try {
-				const source = castAST<ASTWithSource>(attr.value).source || "";
-				const body = parse(source).body[0];
+				const rawSource = castAST<ASTWithSource>(attr.value).source || "";
+				//  Convert foo{{bar}} in <p id="foo{{bar}}"> to 'foo' + bar
+				const source = rawSource
+					.replace(/\}\}(.*)\{\{/g, "}} + '$1' + {{")
+					.replace(/^(.*?)\{\{/, "'$1' + {{")
+					.replace(/\{\{(.*?)\}\}/g, "$1");
+				const body = parse(source.replace(/(.*)\{\{(.*)\}\}/, "'$1' + $2"))
+					.body[0];
 				const expression =
 					castNode<TSESTree.ExpressionStatement>(body).expression;
 				const values = parseExpressionIntoLiterals(expression, properties);
@@ -197,7 +204,13 @@ const pairwisePropertyNameAndValue = (
 					sourceSpan: attr.sourceSpan,
 				}));
 			} catch {
-				return undefined;
+				return [
+					{
+						name: attr.name,
+						value: "some-random-value",
+						sourceSpan: attr.sourceSpan,
+					},
+				];
 			}
 		})
 		.filter((attr) => !!attr);
@@ -214,7 +227,7 @@ const pairwisePropertyNameAndValue = (
  * @returns An array of possible string, undefined, or null literal values.
  */
 const parseExpressionIntoLiterals = (
-	expression: TSESTree.Expression,
+	expression: TSESTree.Node,
 	properties: Properties,
 ): (string | undefined | null)[] => {
 	if (isTSESTreeConditionalExpression(expression)) {
@@ -240,7 +253,7 @@ const parseExpressionIntoLiterals = (
 		if (name === "undefined") {
 			return [undefined];
 		}
-		return [properties.get(name) || "some random value"];
+		return [properties.get(name) || "some-random-value"];
 	}
 
 	if (isTSESTreeCallExpression(expression)) {
@@ -248,5 +261,28 @@ const parseExpressionIntoLiterals = (
 		return parseExpressionIntoLiterals(callee, properties);
 	}
 
-	return ["some random value"];
+	if (isTSESTreeBinaryExpression(expression)) {
+		const binaryExpression = castNode<TSESTree.BinaryExpression>(expression);
+		if (binaryExpression.operator === "+") {
+			// It doesn't make sense to apply "+" operator to null or undefined, so it's safe to filter
+			const left = parseExpressionIntoLiterals(
+				binaryExpression.left,
+				properties,
+			).filter((operand) => !!operand);
+			const right = parseExpressionIntoLiterals(
+				binaryExpression.right,
+				properties,
+			).filter((operand) => !!operand);
+
+			const result: string[] = [];
+			for (const leftOperand of left) {
+				for (const rightOperand of right) {
+					result.push(leftOperand!.toString() + rightOperand!.toString());
+				}
+			}
+			return result;
+		}
+	}
+
+	return ["some-random-value"];
 };

@@ -2,6 +2,16 @@ import type {
 	ParsedTemplate,
 	TmplAstTemplate as Template,
 } from "@angular/compiler";
+import {
+	TmplAstBoundText,
+	TmplAstDeferredBlock,
+	TmplAstElement,
+	TmplAstForLoopBlock,
+	TmplAstIfBlock,
+	TmplAstSwitchBlock,
+	TmplAstTemplate,
+	TmplAstText,
+} from "@angular/compiler";
 import type {
 	BridgeOption,
 	Properties,
@@ -17,17 +27,6 @@ import { transformTmplAstIfBlock } from "./if.js";
 import { transformTmplAstSwitchBlock } from "./switch.js";
 import { transformTmplAstTemplate } from "./template.js";
 import { transformTmplAstText } from "./text.js";
-
-import {
-	TmplAstBoundText,
-	TmplAstDeferredBlock,
-	TmplAstElement,
-	TmplAstForLoopBlock,
-	TmplAstIfBlock,
-	TmplAstSwitchBlock,
-	TmplAstTemplate,
-	TmplAstText,
-} from "@angular/compiler";
 
 /**
  * Transforms a ParsedTemplate object into a 2D array of DOM Nodes.

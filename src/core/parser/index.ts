@@ -8,8 +8,8 @@
 import type { TmplAstTemplate } from "@angular/compiler";
 import {
 	parseTemplate,
-	tmplAstVisitAll,
 	TmplAstRecursiveVisitor,
+	tmplAstVisitAll,
 } from "@angular/compiler";
 
 /**

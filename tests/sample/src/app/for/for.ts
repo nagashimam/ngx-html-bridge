@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-for',
-  imports: [],
-  templateUrl: './for.html',
-  styleUrl: './for.scss'
+	selector: "app-for",
+	imports: [],
+	templateUrl: "./for.html",
+	styleUrl: "./for.scss",
 })
 export class For {
-  items: string[] = ['one', 'two', 'three'];
+	items: string[] = [...["1", "2", "3"], "one", "two", "three"];
+	idText = "id-text";
 }

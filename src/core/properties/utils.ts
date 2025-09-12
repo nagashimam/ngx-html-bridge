@@ -30,6 +30,25 @@ export const isTSESTreeCallExpression = (node: TSESTree.Node) =>
 	(node?.type as string) === TSESTree.AST_NODE_TYPES.CallExpression;
 
 /**
+ * Checks if a node is a `BinaryExpression`.
+ * @param node The node to check.
+ * @returns True if the node is a `BinaryExpression`.
+ */
+export const isTSESTreeBinaryExpression = (node: TSESTree.Node) =>
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.BinaryExpression;
+
+/**
+ * Checks if a node is a `ArrayExpression`.
+ * @param node The node to check.
+ * @returns True if the node is a `ArrayExpression`.
+ */
+export const isTSESTreeArrayExpression = (node: TSESTree.Node) =>
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.ArrayExpression;
+
+export const isTSESTreeSpreadElement = (node: TSESTree.Node) =>
+	(node?.type as string) === TSESTree.AST_NODE_TYPES.SpreadElement;
+
+/**
  * Checks if a node is an `Identifier`.
  * @param node The node to check.
  * @returns True if the node is an `Identifier`.

@@ -20,7 +20,6 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	option,
 ) => {
 	const result: Node[][] = [];
-
 	// Handle case for no loop
 	if (forBlock.empty && forBlock.empty.children.length > 0) {
 		for (const parsedEmptyBlock of await transformTmplAstNodes(
@@ -36,6 +35,8 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	}
 
 	// Handle case for loop once
+	// Set $index variable in for loop
+	properties.set("$index", "0");
 	for (const parsedForBlock of await transformTmplAstNodes(
 		forBlock.children,
 		tmplAstTemplates,
@@ -46,13 +47,24 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	}
 
 	// Handle case for loop twice
-	for (const parsedForBlock of await transformTmplAstNodes(
-		[...forBlock.children, ...forBlock.children],
+	const firstLoop = await transformTmplAstNodes(
+		forBlock.children,
 		tmplAstTemplates,
 		properties,
 		option,
-	)) {
-		result.push(parsedForBlock);
+	);
+	properties.delete("$index");
+	properties.set("$index", "1");
+	const secondLoop = await transformTmplAstNodes(
+		forBlock.children,
+		tmplAstTemplates,
+		properties,
+		option,
+	);
+
+	for (let i = 0; i < firstLoop.length; i++) {
+		firstLoop[i].push(...secondLoop[i]);
+		result.push(firstLoop[i]);
 	}
 
 	return result;

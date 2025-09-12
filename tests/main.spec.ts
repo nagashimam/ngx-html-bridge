@@ -75,8 +75,8 @@ test("parseAngularTemplateFile returns expected HTML for @for block", async () =
 		result.sort(),
 		[
 			"",
-			"<p>some random text</p>",
-			"<p>some random text</p><p>some random text</p>",
+			'<p id="test-0-id-text">some random text</p>',
+			'<p id="test-0-id-text">some random text</p><p id="test-1-id-text">some random text</p>',
 		].sort(),
 	);
 });
