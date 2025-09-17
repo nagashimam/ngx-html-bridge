@@ -5,12 +5,13 @@
     "type": "git",
     "url": "https://github.com/nagashimam/ngx-html-bridge"
   },
-  "version": "0.0.27",
+  "version": "0.0.29",
   "description": "An Angular Template Parser to convert Angular templates into an array of standard, static HTML strings.",
   "main": "dist/main.js",
   "type": "module",
   "types": "dist/main.d.ts",
   "scripts": {
+    "watch": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --watch --bundle --tree-shaking=true --platform=node --format=esm --external:'./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js' --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
     "build": "tsc --emitDeclarationOnly --outDir dist && esbuild src/main.ts --bundle --tree-shaking=true --platform=node --format=esm --external:'./node_modules/jsdom/lib/jsdom/living/xhr/xhr-sync-worker.js' --external:'node:*' --external:jsdom --external:@typescript-eslint/typescript-estree --outfile=dist/main.js",
     "test": "node --import tsx --test tests/main.spec.ts",
     "lint": "biome check src --write",

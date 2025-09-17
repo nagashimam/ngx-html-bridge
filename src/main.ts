@@ -3,9 +3,9 @@ import { generateHTMLs } from "./core/generator/index.js";
 import { parse } from "./core/parser/index.js";
 import { getPropertiesFromComponent } from "./core/properties/index.js";
 import { transformParsedTemplate } from "./core/transformer/index.js";
-import { BridgeOption, type HtmlVariation } from "./types/index.js";
+import type { BridgeOption, HtmlVariation } from "./types/index.js";
 
-export { BridgeOption, type HtmlVariation } from "./types/index.js";
+export type { BridgeOption, HtmlVariation } from "./types/index.js";
 
 /**
  * Parses an Angular template file and returns an array of possible static HTML string variations.
@@ -15,7 +15,10 @@ export { BridgeOption, type HtmlVariation } from "./types/index.js";
  */
 export const parseAngularTemplateFile = (
 	templatePath: string,
-	option: typeof BridgeOption = BridgeOption,
+	option: BridgeOption = {
+		includedAttributes: [],
+		nonEmptyItems: [],
+	},
 ): Promise<HtmlVariation[]> => {
 	const template = fs.readFileSync(templatePath, "utf-8");
 	return parseAngularTemplate(template, templatePath, option);
@@ -24,7 +27,10 @@ export const parseAngularTemplateFile = (
 export const parseAngularTemplate = async (
 	template: string,
 	templatePath: string,
-	option: typeof BridgeOption = BridgeOption,
+	option: BridgeOption = {
+		includedAttributes: [],
+		nonEmptyItems: [],
+	},
 ): Promise<HtmlVariation[]> => {
 	const { parsedTemplate, tmplAstTemplates } = parse(template, templatePath);
 	const properties = await getPropertiesFromComponent(templatePath);

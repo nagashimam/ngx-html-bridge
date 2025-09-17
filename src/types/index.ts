@@ -15,7 +15,7 @@ export type TmplAstNodesTransformer = (
 	nodes: TmplAstNode[],
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-	option: typeof BridgeOption,
+	option: BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -33,7 +33,7 @@ export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
 	tmplAstNodesTransformer: TmplAstNodesTransformer,
-	option: typeof BridgeOption,
+	option: BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -43,7 +43,7 @@ export type TmplAstNodeDispatcher = (
 	astNode: TmplAstNode,
 	tmplAstTemplates: TmplAstTemplate[],
 	properties: Properties,
-	option: typeof BridgeOption,
+	option: BridgeOption,
 ) => Promise<Node[][]>;
 
 /**
@@ -85,9 +85,13 @@ export type HtmlVariation = {
 /**
  * Represents options for the bridge.
  */
-export const BridgeOption = {
+export interface BridgeOption {
 	/**
 	 * A list of attribute names to include in the final HTML.
-	 */ includedAttributes: [] as string[],
-};
-export type BridgeOption = typeof BridgeOption;
+	 */
+	includedAttributes: string[];
+	/*
+	 * A list of items that are checked if they're not empty in @if
+	 */
+	nonEmptyItems: string[];
+}

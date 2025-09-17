@@ -1,4 +1,8 @@
-import type { TmplAstForLoopBlock } from "@angular/compiler";
+import type {
+	ASTWithSource,
+	PropertyRead,
+	TmplAstForLoopBlock,
+} from "@angular/compiler";
 import type { TmplAstBranchNodeTransformer } from "../../types/index.js";
 
 /**
@@ -21,17 +25,22 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 ) => {
 	const result: Node[][] = [];
 	// Handle case for no loop
-	if (forBlock.empty && forBlock.empty.children.length > 0) {
-		for (const parsedEmptyBlock of await transformTmplAstNodes(
-			forBlock.empty.children,
-			tmplAstTemplates,
-			properties,
-			option,
-		)) {
-			result.push(parsedEmptyBlock);
+	// If variable is checked to have more than 1 items, we don't need case for no loop
+	const name =
+		((forBlock.expression as ASTWithSource)?.ast as PropertyRead)?.name || "";
+	if (!option.nonEmptyItems.includes(name)) {
+		if (forBlock.empty && forBlock.empty.children.length > 0) {
+			for (const parsedEmptyBlock of await transformTmplAstNodes(
+				forBlock.empty.children,
+				tmplAstTemplates,
+				properties,
+				option,
+			)) {
+				result.push(parsedEmptyBlock);
+			}
+		} else {
+			result.push([]);
 		}
-	} else {
-		result.push([]);
 	}
 
 	// Handle case for loop once

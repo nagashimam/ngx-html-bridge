@@ -81,6 +81,28 @@ test("parseAngularTemplateFile returns expected HTML for @for block", async () =
 	);
 });
 
+test("parseAngularTemplateFile returns expected HTML for @for block with length check", async () => {
+	const templatePath =
+		"tests/sample/src/app/for-with-length-check/for-with-length-check.html";
+	const result = (await parseAngularTemplateFile(templatePath)).map(
+		(r) => r.plain,
+	);
+	assert.deepStrictEqual(
+		result.sort(),
+		[
+			"",
+			"<ul><li>some random text</li></ul>",
+			"<ul><li>some random text</li></ul>",
+			"<ul><li>some random text</li><li>some random text</li></ul>",
+			"<ul><li>some random text</li><li>some random text</li></ul>",
+			"<ul><li>some random text</li></ul><ul><li>some random text</li></ul>",
+			"<ul><li>some random text</li></ul><ul><li>some random text</li><li>some random text</li></ul>",
+			"<ul><li>some random text</li><li>some random text</li></ul><ul><li>some random text</li></ul>",
+			"<ul><li>some random text</li><li>some random text</li></ul><ul><li>some random text</li><li>some random text</li></ul>",
+		].sort(),
+	);
+});
+
 test("parseAngularTemplateFile returns expected HTML for @for block with @empty", async () => {
 	const templatePath =
 		"tests/sample/src/app/for-with-empty/for-with-empty.html";

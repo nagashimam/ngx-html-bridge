@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-if-without-else',
-  imports: [],
-  templateUrl: './if-without-else.html',
-  styleUrl: './if-without-else.scss'
+	selector: "app-if-without-else",
+	imports: [],
+	templateUrl: "./if-without-else.html",
+	styleUrl: "./if-without-else.scss",
 })
 export class IfWithoutElse {
-  condition: boolean = true;
+	users = ["木原", "長島"];
+	condition: boolean = true;
 }

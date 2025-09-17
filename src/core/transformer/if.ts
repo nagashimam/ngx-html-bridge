@@ -1,4 +1,4 @@
-import type { TmplAstIfBlock } from "@angular/compiler";
+import type { ASTWithSource, TmplAstIfBlock } from "@angular/compiler";
 import type { TmplAstBranchNodeTransformer } from "../../types/index.js";
 
 /**
@@ -26,12 +26,21 @@ export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 		result.push([]);
 	}
 	for (const branch of ifBlock.branches) {
+		const source = ((branch.expression as ASTWithSource)?.source || "").trim();
+		const lengthCheckMatches = source.match(/(.*).length/);
+		const nonEmptyItems = lengthCheckMatches
+			? [...option.nonEmptyItems, lengthCheckMatches[1]]
+			: option.nonEmptyItems;
+
 		result.push(
 			...(await transformTmplAstNodes(
 				branch.children,
 				tmplAstTemplates,
 				properties,
-				option,
+				{
+					...option,
+					nonEmptyItems,
+				},
 			)),
 		);
 	}
