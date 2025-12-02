@@ -15,7 +15,7 @@ export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 > = async (
 	ifBlock,
 	tmplAstTemplates,
-	properties,
+	metadata,
 	transformTmplAstNodes,
 	option,
 ) => {
@@ -29,18 +29,31 @@ export const transformTmplAstIfBlock: TmplAstBranchNodeTransformer<
 		const source = ((branch.expression as ASTWithSource)?.source || "").trim();
 		const lengthCheckMatches = source.match(/(.*).length/);
 		const nonEmptyItems = lengthCheckMatches
+<<<<<<< HEAD
 			? [...option.nonEmptyItems, lengthCheckMatches[1]]
 			: option.nonEmptyItems;
+=======
+			? [...metadata.nonEmptyItems, lengthCheckMatches[1]]
+			: metadata.nonEmptyItems;
+>>>>>>> 51f82da (feat: Add empty loop check)
 
 		result.push(
 			...(await transformTmplAstNodes(
 				branch.children,
 				tmplAstTemplates,
+<<<<<<< HEAD
 				properties,
 				{
 					...option,
 					nonEmptyItems,
 				},
+=======
+				{
+					...metadata,
+					nonEmptyItems,
+				},
+				option,
+>>>>>>> 51f82da (feat: Add empty loop check)
 			)),
 		);
 	}

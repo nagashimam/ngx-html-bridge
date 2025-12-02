@@ -14,8 +14,8 @@ import {
 } from "@angular/compiler";
 import type {
 	BridgeOption,
-	Properties,
 	TmplAstNodeDispatcher,
+	TmplAstNodeMetadata,
 	TmplAstNodesTransformer,
 } from "../../types/index.js";
 import { transformTmplAstBoundText } from "./bound-text.js";
@@ -38,13 +38,13 @@ import { transformTmplAstText } from "./text.js";
 export const transformParsedTemplate = (
 	parsedTemplate: ParsedTemplate,
 	tmplAstTemplates: Template[],
-	properties: Properties,
+	metadata: TmplAstNodeMetadata,
 	option: BridgeOption,
 ) => {
 	return transformTmplAstNodes(
 		parsedTemplate.nodes,
 		tmplAstTemplates,
-		properties,
+		metadata,
 		option,
 	);
 };
@@ -59,11 +59,11 @@ export const transformParsedTemplate = (
 const transformTmplAstNodes: TmplAstNodesTransformer = async (
 	astNodes,
 	tmplAstTemplates,
-	properties,
+	metadata,
 	option,
 ) => {
 	const parsed = astNodes.map((astNode) =>
-		transformTmplAstNode(astNode, tmplAstTemplates, properties, option),
+		transformTmplAstNode(astNode, tmplAstTemplates, metadata, option),
 	);
 	return generateCombinations(await Promise.all(parsed));
 };
@@ -78,7 +78,7 @@ const transformTmplAstNodes: TmplAstNodesTransformer = async (
 const transformTmplAstNode: TmplAstNodeDispatcher = async (
 	astNode,
 	tmplAstTemplates,
-	properties,
+	metadata,
 	option,
 ) => {
 	if (astNode instanceof TmplAstIfBlock) {
@@ -86,7 +86,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 			astNode,
 			tmplAstTemplates,
 
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);
@@ -96,7 +96,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 		return transformTmplAstSwitchBlock(
 			astNode,
 			tmplAstTemplates,
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);
@@ -106,7 +106,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 		return transformTmplAstForLoopBlock(
 			astNode,
 			tmplAstTemplates,
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);
@@ -116,7 +116,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 		return transformTmplAstDeferredBlock(
 			astNode,
 			tmplAstTemplates,
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);
@@ -126,7 +126,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 		return transformTmplAstTemplate(
 			astNode,
 			tmplAstTemplates,
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);
@@ -136,7 +136,7 @@ const transformTmplAstNode: TmplAstNodeDispatcher = async (
 		return transformTmplAstElement(
 			astNode,
 			tmplAstTemplates,
-			properties,
+			metadata,
 			transformTmplAstNodes,
 			option,
 		);

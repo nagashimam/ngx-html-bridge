@@ -17,7 +17,10 @@ export const parseAngularTemplateFile = (
 	templatePath: string,
 	option: BridgeOption = {
 		includedAttributes: [],
+<<<<<<< HEAD
 		nonEmptyItems: [],
+=======
+>>>>>>> 51f82da (feat: Add empty loop check)
 	},
 ): Promise<HtmlVariation[]> => {
 	const template = fs.readFileSync(templatePath, "utf-8");
@@ -29,7 +32,10 @@ export const parseAngularTemplate = async (
 	templatePath: string,
 	option: BridgeOption = {
 		includedAttributes: [],
+<<<<<<< HEAD
 		nonEmptyItems: [],
+=======
+>>>>>>> 51f82da (feat: Add empty loop check)
 	},
 ): Promise<HtmlVariation[]> => {
 	const { parsedTemplate, tmplAstTemplates } = parse(template, templatePath);
@@ -37,7 +43,7 @@ export const parseAngularTemplate = async (
 	const nodes = await transformParsedTemplate(
 		parsedTemplate,
 		tmplAstTemplates,
-		properties,
+		{ properties, nonEmptyItems: [] },
 		option,
 	);
 	return generateHTMLs(nodes);

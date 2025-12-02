@@ -19,21 +19,30 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 > = async (
 	forBlock,
 	tmplAstTemplates,
-	properties,
+	metadata,
 	transformTmplAstNodes,
 	option,
 ) => {
+	const { properties, nonEmptyItems } = metadata;
 	const result: Node[][] = [];
 	// Handle case for no loop
 	// If variable is checked to have more than 1 items, we don't need case for no loop
 	const name =
 		((forBlock.expression as ASTWithSource)?.ast as PropertyRead)?.name || "";
+<<<<<<< HEAD
 	if (!option.nonEmptyItems.includes(name)) {
+=======
+	if (!nonEmptyItems.includes(name)) {
+>>>>>>> 51f82da (feat: Add empty loop check)
 		if (forBlock.empty && forBlock.empty.children.length > 0) {
 			for (const parsedEmptyBlock of await transformTmplAstNodes(
 				forBlock.empty.children,
 				tmplAstTemplates,
+<<<<<<< HEAD
 				properties,
+=======
+				metadata,
+>>>>>>> 51f82da (feat: Add empty loop check)
 				option,
 			)) {
 				result.push(parsedEmptyBlock);
@@ -49,7 +58,10 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	for (const parsedForBlock of await transformTmplAstNodes(
 		forBlock.children,
 		tmplAstTemplates,
-		properties,
+		{
+			...metadata,
+			properties,
+		},
 		option,
 	)) {
 		result.push(parsedForBlock);
@@ -59,7 +71,10 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	const firstLoop = await transformTmplAstNodes(
 		forBlock.children,
 		tmplAstTemplates,
-		properties,
+		{
+			...metadata,
+			properties,
+		},
 		option,
 	);
 	properties.delete("$index");
@@ -67,7 +82,10 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 	const secondLoop = await transformTmplAstNodes(
 		forBlock.children,
 		tmplAstTemplates,
-		properties,
+		{
+			...metadata,
+			properties,
+		},
 		option,
 	);
 
@@ -75,6 +93,7 @@ export const transformTmplAstForLoopBlock: TmplAstBranchNodeTransformer<
 		firstLoop[i].push(...secondLoop[i]);
 		result.push(firstLoop[i]);
 	}
+	properties.delete("$index");
 
 	return result;
 };

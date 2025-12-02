@@ -19,7 +19,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 > = async (
 	ngIfTemplate,
 	tmplAstTemplates,
-	properties,
+	metadata,
 	transformTmplAstNodes,
 	option,
 ) => {
@@ -33,7 +33,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				thenClause.children,
 				tmplAstTemplates,
-				properties,
+				metadata,
 				option,
 			)),
 		);
@@ -42,7 +42,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				ngIfTemplate.children,
 				tmplAstTemplates,
-				properties,
+				metadata,
 				option,
 			)),
 		);
@@ -53,7 +53,7 @@ export const transformTmplAstTemplateNgIf: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				elseClause.children,
 				tmplAstTemplates,
-				properties,
+				metadata,
 				option,
 			)),
 		);
