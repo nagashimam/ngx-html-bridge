@@ -15,7 +15,7 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 > = async (
 	deferBlock,
 	tmplAstTemplates,
-	metadata,
+	properties,
 	transformTmplAstNodes,
 	option,
 ) => {
@@ -27,7 +27,7 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				deferBlock.children,
 				tmplAstTemplates,
-				metadata,
+				properties,
 				option,
 			)),
 		);
@@ -39,7 +39,7 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				deferBlock.placeholder.children,
 				tmplAstTemplates,
-				metadata,
+				properties,
 				option,
 			)),
 		);
@@ -51,7 +51,7 @@ export const transformTmplAstDeferredBlock: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				deferBlock.loading.children,
 				tmplAstTemplates,
-				metadata,
+				properties,
 				option,
 			)),
 		);

@@ -9,24 +9,12 @@ import type {
 } from "@angular/compiler";
 
 /**
- * Metadata about template node
- */
-export interface TmplAstNodeMetadata {
-	properties: Properties;
-	nonEmptyItems: string[];
-}
-
-/**
  * A function that transforms an array of `TmplAstNode` objects into a 2D array of DOM Nodes.
  */
 export type TmplAstNodesTransformer = (
 	nodes: TmplAstNode[],
 	tmplAstTemplates: TmplAstTemplate[],
-<<<<<<< HEAD
 	properties: Properties,
-=======
-	metadata: TmplAstNodeMetadata,
->>>>>>> 51f82da (feat: Add empty loop check)
 	option: BridgeOption,
 ) => Promise<Node[][]>;
 
@@ -43,7 +31,7 @@ export type TmplAstLeafNodeTransformer<T extends TmplAstNode> = (
 export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 	node: T,
 	tmplAstTemplates: TmplAstTemplate[],
-	metadata: TmplAstNodeMetadata,
+	properties: Properties,
 	tmplAstNodesTransformer: TmplAstNodesTransformer,
 	option: BridgeOption,
 ) => Promise<Node[][]>;
@@ -54,11 +42,7 @@ export type TmplAstBranchNodeTransformer<T extends TmplAstNode> = (
 export type TmplAstNodeDispatcher = (
 	astNode: TmplAstNode,
 	tmplAstTemplates: TmplAstTemplate[],
-<<<<<<< HEAD
 	properties: Properties,
-=======
-	metadata: TmplAstNodeMetadata,
->>>>>>> 51f82da (feat: Add empty loop check)
 	option: BridgeOption,
 ) => Promise<Node[][]>;
 
@@ -106,11 +90,8 @@ export interface BridgeOption {
 	 * A list of attribute names to include in the final HTML.
 	 */
 	includedAttributes: string[];
-<<<<<<< HEAD
 	/*
 	 * A list of items that are checked if they're not empty in @if
 	 */
 	nonEmptyItems: string[];
-=======
->>>>>>> 51f82da (feat: Add empty loop check)
 }

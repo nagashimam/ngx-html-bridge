@@ -15,7 +15,7 @@ export const transformTmplAstSwitchBlock: TmplAstBranchNodeTransformer<
 > = async (
 	switchBlock,
 	tmplAstTemplates,
-	metadata,
+	properties,
 	transformTmplAstNodes,
 	option,
 ) => {
@@ -26,7 +26,7 @@ export const transformTmplAstSwitchBlock: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				switchCase.children,
 				tmplAstTemplates,
-				metadata,
+				properties,
 				option,
 			)),
 		);

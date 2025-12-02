@@ -40,7 +40,7 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 > = async (
 	element,
 	tmplAstTemplates,
-	metadata,
+	properties,
 	transformTmplAstNodes,
 	option,
 ) => {
@@ -49,14 +49,13 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 			...(await transformTmplAstNodes(
 				element.children,
 				tmplAstTemplates,
-				metadata,
+				properties,
 				option,
 			)),
 		];
 	}
 	const parsedElementNodes: Node[][] = [];
 
-	const { properties } = metadata;
 	const properties2DArray = pairwisePropertyNameAndValue(
 		element.inputs,
 		properties,
@@ -69,7 +68,7 @@ export const transformTmplAstElement: TmplAstBranchNodeTransformer<
 	const children2DArray = await transformTmplAstNodes(
 		element.children,
 		tmplAstTemplates,
-		metadata,
+		properties,
 		option,
 	);
 
